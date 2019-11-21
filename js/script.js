@@ -20,11 +20,11 @@ if(Modernizr.webgl) {
 		oldlsoa11cd = "";
 		firsthover = true;
 
-		layernames = ["imddata2_i","imddata2_1","imddata2_e","imddata2_2","imddata2_h","imddata2_c","imddata2_3","imddata2_4"];
-		layername = "imddata2_i";
+		layernames = ["burglaries_per_capita_max_0_05_burglaries_per_capita"];
+		layername = "burglaries_per_capita_max_0_05_burglaries_per_capita";
 
-		hoverlayernames = ["imddata_imddata__2","imddata_imddata__3","imddata_imddata__4","imddata_imddata__5","imddata_imddata__6","imddata_imddata__7","imddata_imddata__8","imddata_imddata__9"]
-		hoverlayername = "imddata_imddata__2";
+		hoverlayernames = ["burglary_per_capita_burglaries_per_capita"]
+		hoverlayername = "burglary_per_capita_burglaries_per_capita";
 
 		windowheight = window.innerHeight;
 		d3.select("#map").style("height",windowheight + "px")
@@ -39,6 +39,11 @@ if(Modernizr.webgl) {
 		displayformat = d3.format(",." + dvc.displaydecimals + "f");
 		legendformat = d3.format(",");
 
+		// Set up stops
+		var breaksSliced = dvc.breaks.slice(1) // gets everything other than first element
+		stops = breaksSliced.map(function(x, i) {
+			return [x, dvc.varcolour[i]]
+		});
 		//set up basemap
 		map = new mapboxgl.Map({
 		  container: 'map', // container id
@@ -61,6 +66,8 @@ if(Modernizr.webgl) {
 
 		// Disable map rotation using touch rotation gesture
 		map.touchZoomRotate.disableRotation();
+
+		map.on("zoom", function(){console.log(map.getZoom())})
 
 
 		// Add geolocation controls to the map.
@@ -128,19 +135,19 @@ if(Modernizr.webgl) {
 					'type': 'fill',
 					"source": {
 						"type": "vector",
-						//"tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles/{z}/{x}/{y}.pbf"],
+						"tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
+						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles/{z}/{x}/{y}.pbf"],
 						"minzoom": 4,
 						"maxzoom": 13
 					},
-					"source-layer": "imddata2",
+					"source-layer": "burglary_max_0_05",
 					"background-color": "#ccc",
 					'paint': {
 							'fill-opacity':1,
 							'fill-outline-color':'rgba(0,0,0,0)',
 							'fill-color': {
 									// Refers to the data of that specific property of the polygon
-								'property': layername,
+								'property': 'burglaries_per_capita_max_0_05_burglaries_per_capita',
 								'default': '#666666',
 								// Prevents interpolation of colors between stops
 								'base': 0,
@@ -150,20 +157,26 @@ if(Modernizr.webgl) {
 							//	"varcolour": ["#798234","#939956","#acb178","#c7c99c","#e2e2bf","#e5b9ad","#dfa2a1","#da8b95","#d5728a","#d0587e"],
 							//"varcolour": ["#37ae3f", "#6cc064", "#97d287", "#bfe4ab", "#e6f5d0","#f0dccd","#eabcb9","#e39ca5","#da7b91","#d0587e"],
 
-								'stops': [
-									[0, '#d0587e'],
-									[1, '#d0587e'],
-									[2, '#da7b91'],
-									[3, '#e39ca5'],
-									[4, '#eabcb9'],
-									[5, '#f0dccd'],
-									[6, '#e6f5d0'],
-									[7, '#bfe4ab'],
-									[8, '#97d287'],
-									[9, '#6cc064'],
-									[10, '#37ae3f']
-
-								]
+								'stops': stops
+								// [
+								// 	// [0, '#15534C'],
+								// 	// [0.0129683, '#15534C'], // jenks
+								// 	// [0.024633822, '#30785B'],
+								// 	// [0.043992121, '#5D9D61'],
+								// 	// [0.104316547, '#99C160'],
+								// 	// [0.544303797, '#E2E062']
+								// 	// [0.00702, '#15534C'], // equal breaks
+								// 	// [0.0109, '#30785B'],
+								// 	// [0.0156, '#5D9D61'],
+								// 	// [0.0226, '#99C160'],
+								// 	// [0.5443, '#E2E062']
+								// 	[0.000387898, '#15534C'], // k-quintiles
+								// 	[0.007729469, '#15534C'],
+								// 	[0.012013455, '#30785B'],
+								// 	[0.016914403, '#5D9D61'],
+								// 	[0.024421594, '#99C160'],
+								// 	[0.544303797, '#E2E062']
+								// ]
 							}
 
 						}
@@ -174,10 +187,11 @@ if(Modernizr.webgl) {
 					"type": "fill",
 					"source": {
 						"type": "vector",
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
+						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles2/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
-					"source-layer": "imdatafull",
+					"source-layer": "lsoas",
 					"layout": {},
 					'paint': {
 							'fill-opacity':0,
@@ -191,13 +205,14 @@ if(Modernizr.webgl) {
 					"type": "line",
 					"source": {
 						"type": "vector",
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
+						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles2/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
-					"source-layer": "imdatafull",
+					"source-layer": "lsoas",
 					"layout": {},
 					"paint": {
-						"line-color": "orange",
+						"line-color": "aqua",
 						"line-width": 3
 					},
 					"filter": ["==", "lsoa11cd", ""]
@@ -236,6 +251,8 @@ if(Modernizr.webgl) {
 				onMove = onMove.debounce(100);
 				onLeave = onLeave.debounce(100);
 			};
+
+			d3.select("#keyvalue").style("font-weight","bold").html("")
 
 			//Highlight stroke on mouseover (and show area information)
 			map.on("mousemove", "lsoa-outlines", onMove);
@@ -309,13 +326,12 @@ if(Modernizr.webgl) {
 					var features = map.queryRenderedFeatures(e.point,{layers: ['lsoa-outlines']});
 				 	if(features.length != 0){
 
-
 						setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayername]);
 						updatePercent(e.features[0]);
 					}
 					//setAxisVal(e.features[0].properties.lsoa11nm, e.features[0].properties["houseprice"]);
 				}
-		};
+		}; // end function onMove
 
 
 		function tog(v){return v?'addClass':'removeClass';}
@@ -372,21 +388,60 @@ if(Modernizr.webgl) {
 				map.on("mouseleave", "lsoa-outlines", onLeave);
 		}
 
-
 		function setAxisVal(areanm,areaval) {
-
-			d3.select("#keyvalue").style("font-weight","bold").text(function(){
+			d3.select("#keyvalue").style("font-weight","bold").html(function(){
 				if(!isNaN(areaval)) {
-					return areanm;
+					return areanm + " &#8212 " + d3.format(".3f")(areaval) + " burglaries per person.</br>1 burglary for every " + d3.format(".0f")(5*Math.round( ((1/areaval)*3) /5)) + " people over the course of one year.";
 				} else {
 					return areanm;
 				}
+			// d3.select("#keyvalue").style("font-weight","bold")
+	  	// 	.attr("dy", "1em") // you can vary how far apart it shows up
+	  	// 	.text("line 2")
 			});
 
 			d3.selectAll(".blocks").attr("stroke","black").attr("stroke-width","2px");
 
-			d3.select("#block" + (11 - areaval)).attr("stroke","orange").attr("stroke-width","3px").raise()
+			function blockLookup(areaval) {
+				for (i = 0; i <= dvc.numberBreaks; i++) {
+					if (areaval < breaks[i]) {
+						return i
+					}
+				}
+				return dvc.numberBreaks // if areaval is larger than top value, assign to top value block
+			}
+			d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
 
+			function getLineX(areaval) {
+				if(!isNaN(areaval)) {
+					if (areaval > 0.05) return x(0.05);
+					else return x(areaval);
+				}
+				else return x(midpoint);
+			}
+			var lineX = getLineX(areaval)
+
+			d3.select("#currLine")
+							.style("opacity", 1)
+							.transition()
+							.duration(400)
+							.attr("x1", lineX)
+							.attr("x2", lineX);
+
+
+						d3.select("#currVal")
+							.text(function() {
+								if(!isNaN(areaval)) {
+									if (areaval > 0.05) {
+										return "> 0.05"
+									}
+									else {return displayformat(areaval)}
+								}
+								else {return "Data unavailable"}
+							})
+							.transition()
+							.duration(400)
+							.attr("x", lineX);
 
 		}
 
@@ -396,16 +451,67 @@ if(Modernizr.webgl) {
 			d3.selectAll(".blocks").attr("stroke","black").attr("stroke-width","2px");
 			d3.selectAll(".legendRect").style("width","0px");
 
+			d3.select("#currLine")
+				.style("opacity", 0)
 
+			d3.select("#currVal").text("")
 		}
 
 		function createKey(config){
+
+			// keywidth = d3.select("#keydiv").node().getBoundingClientRect().width;
+			//
+			// var svgkey = d3.select("#keydiv")
+			// 	.append("svg")
+			// 	.attr("id", "key")
+			// 	.attr("width", keywidth)
+			// 	.attr("height",65);
+			//
+			//
+			// var color = d3.scaleThreshold()
+			//    .domain(breaks)
+			//    .range(colour);
+			//
+			// // Set up scales for legend
+			// x = d3.scaleLinear()
+			// 	.domain([breaks[0], breaks[dvc.numberBreaks]]) /*range for data*/
+			// 	.range([0,keywidth-30]); /*range for pixels*/
+			//
+			//
+			// var xAxis = d3.axisBottom(x)
+			// 	.tickSize(15)
+			// 	.tickValues(color.domain())
+			// 	.tickFormat(legendformat);
+			//
+			// var g2 = svgkey.append("g").attr("id","horiz")
+			// 	.attr("transform", "translate(15,30)");
+			//
+			//
+			// keyhor = d3.select("#horiz");
+			//
+			// g2.selectAll("rect")
+			// 	.data(color.range().map(function(d,i) {
+			//
+			// 	  return {
+			// 		x0: i ? x(color.domain()[i+1]) : x.range()[0],
+			// 		x1: i < color.domain().length ? x(color.domain()[i+1]) : x.range()[1],
+			// 		z: d
+			// 	  };
+			// 	}))
+			//   .enter().append("rect")
+			// 	.attr("class", "blocks")
+			// 	.attr("height", 8)
+			// 	.attr("x", function(d) {
+			// 		 return d.x0; })
+			// 	.attr("width", function(d) {return d.x1 - d.x0; })
+			// 	.style("opacity",0.8)
+			// 	.style("fill", function(d) { return d.z; });
 
 					keywidth = d3.select("#keydiv").node().getBoundingClientRect().width;
 
 					var svgkey = d3.select("#key")
 						.attr("width", keywidth)
-						.attr("height",20);
+						.attr("height",30);
 
 					var color = d3.scaleThreshold()
 					   .domain(breaks)
@@ -414,7 +520,7 @@ if(Modernizr.webgl) {
 					// Set up scales for legend
 					x = d3.scaleLinear()
 						.domain([breaks[0], breaks[dvc.numberBreaks]]) /*range for data*/
-						.range([0,keywidth-30]); /*range for pixels*/
+						.range([0,keywidth-40]); /*range for pixels*/
 
 
 					var xAxis = d3.axisBottom(x)
@@ -423,7 +529,7 @@ if(Modernizr.webgl) {
 						.tickFormat(legendformat);
 
 					var g2 = svgkey.append("g").attr("id","horiz")
-						.attr("transform", "translate(15,5)");
+						.attr("transform", "translate(15,30)");
 
 
 					keyhor = d3.select("#horiz");
@@ -441,7 +547,7 @@ if(Modernizr.webgl) {
 						.attr("id",function(d,i){return "block" + (i+1)})
 						.attr("class", "blocks")
 						.attr("height", 10)
-						.attr("x", function(d) {
+						.attr("x", function(d) { console.log(d)
 							 return d.x0; })
 						.attr("width", function(d) {return d.x1 - d.x0; })
 						.style("opacity",1)
@@ -449,22 +555,25 @@ if(Modernizr.webgl) {
 						.attr("stroke-width","2px")
 						.style("fill", function(d) { return d.z; });
 
+// console.log(x.domain)
 
 					g2.append("line")
 						.attr("id", "currLine")
-						.attr("x1", x(10))
-						.attr("x2", x(10))
+						.attr("x1", x(x.domain()[0]))
+						.attr("x2", x(x.domain()[0]))
 						.attr("y1", -10)
 						.attr("y2", 8)
 						.attr("stroke-width","2px")
-						.attr("stroke","#000")
-						.attr("opacity",0);
+						.attr("stroke","#fff");
+
+					g2.append("line")
+						.attr("id", "")
 
 					g2.append("text")
 						.attr("id", "currVal")
-						.attr("x", x(10))
-						.attr("y", -15)
-						.attr("fill","#000")
+						.attr("x", x(x.domain()[0]))
+						.attr("y", -12)
+						.style("fill", "#fff")
 						.text("");
 
 
@@ -501,23 +610,25 @@ if(Modernizr.webgl) {
 					// 			// if there are more that 4 breaks, so > 5 ticks, then drop every other.
 					// 			if(i >= 3 && i<11  || i==1){return 0} }
 					// 	);
-						d3.select("#horiz").selectAll("text").attr("opacity",0);
+						//d3.select("#horiz").selectAll("text").attr("opacity",0);
 					}
 
 
-					d3.selectAll(".tick text").attr("transform","translate(-" + (x.range()[1]/10)/2 + ",0)")
+					//d3.selectAll(".tick text").attr("transform","translate(-" + (x.range()[1]/10)/2 + ",0)")
 					//Temporary	hardcode unit text
 					dvc.unittext = "change in life expectancy";
 
-					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-top","-10px").style("margin-left","18px").html(dvc.varunit);
-					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit2);
-					d3.select("#keyunits2").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit3);
+					d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
+					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","2px").style("margin-top","0px").html(dvc.varunit);
+					d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
+					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-7px").style("margin-right","2px").html(dvc.varunit2);
+					// d3.select("#keyunits").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit3);
 
 			} // Ends create key
 
 			function createLegend(keydata) {
 
-							legend = d3.select("#details-content-3").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit3);
+							legend = d3.select("#details-content-3").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit4);
 
 						 legend = d3.select("#details-content-3")//.append('ul')
 						// 	.attr('class', 'key')
@@ -534,15 +645,15 @@ if(Modernizr.webgl) {
 							// 	d3.selectAll(".key-item").style("opacity",1);
 							// })
 
-						legend.append("input")
-								.style("float","left")
-								.attr("id",function(d,i){return "radio"+i})
-								.attr("class","input input--radio js-focusable")
-								.attr("type","radio")
-								.attr("name","layerchoice")
-								.attr("value", function(d,i){return layernames[i]})
-								.property("checked", function(d,i){if(i==0){return true}})
-								.on("click",repaintLayer)
+						// legend.append("input")
+						// 		.style("float","left")
+						// 		.attr("id",function(d,i){return "radio"+i})
+						// 		.attr("class","input input--radio js-focusable")
+						// 		.attr("type","radio")
+						// 		.attr("name","layerchoice")
+						// 		.attr("value", function(d,i){return layernames[i]})
+						// 		.property("checked", function(d,i){if(i==0){return true}})
+						// 		.on("click",repaintLayer)
 
 						legend.append('label')
 						.attr('class','legendlabel').text(function(d,i) {
@@ -550,7 +661,7 @@ if(Modernizr.webgl) {
 							return d;
 						})
 						.attr("value", function(d,i){return layernames[i]})
-						.on("click",repaintLayer);
+						// .on("click",repaintLayer);
 
 
 
@@ -640,7 +751,7 @@ if(Modernizr.webgl) {
 
 			}
 
-			function addLayer(layername){
+			function addLayer(layername){ // TODO: this never gets called anywhere?????
 
 
 
@@ -650,7 +761,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"id":'vectorsource',
 						"type": "vector",
-						//"tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
+						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
 						"tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles/{z}/{x}/{y}.pbf"],
 						"minzoom": 4,
 						"maxzoom": 13
@@ -690,17 +801,19 @@ if(Modernizr.webgl) {
 			function updatePercent(props) {
 
 //"Income","Employment","Education","Health","Crime",	"Environment"],
-		Overall = 11 - props.properties.imddata_imddata__2;
-		Income = 11 - props.properties.imddata_imddata__3;
-		Employment = 11 -props.properties.imddata_imddata__4;
-		Education =	11 -props.properties.imddata_imddata__5;
-		Health = 11 - props.properties.imddata_imddata__6;
-		Crime =	11 - props.properties.imddata_imddata__7;
-		Housing =	11 - props.properties.imddata_imddata__8;
-		Environment= 11 - props.properties.imddata_imddata__9;
+		Deprivation = 2//Math.ceil(props.properties/3475); // TODO: bind the deprivation decile to the
+		HousePrices = 1;
+		// Income = 11 - props.properties.imddata_imddata__3;
+		// Employment = 11 -props.properties.imddata_imddata__4;
+		// Education =	11 -props.properties.imddata_imddata__5;
+		// Health = 11 - props.properties.imddata_imddata__6;
+		// Crime =	11 - props.properties.imddata_imddata__7;
+		// Housing =	11 - props.properties.imddata_imddata__8;
+		// Environment= 11 - props.properties.imddata_imddata__9;
 
-				percentages = [Overall,Income,Employment,Education,Health,Crime,Housing,Environment];
+				percentages = [Deprivation, HousePrices];
 				percentages.forEach(function(d,i) {
+					barwidth = parseInt(d3.select("#bars").style("width"));
 					d3.select("#legendRect" + i).transition().duration(300).style("width", (((barwidth-20)/10)-2) + "px").style("left", (((percentages[i]-1)*((barwidth-20)/10))) + "px");
 				});
 
