@@ -67,8 +67,6 @@ if(Modernizr.webgl) {
 		// Disable map rotation using touch rotation gesture
 		map.touchZoomRotate.disableRotation();
 
-		map.on("zoom", function(){console.log(map.getZoom())})
-
 
 		// Add geolocation controls to the map.
 		map.addControl(new mapboxgl.GeolocateControl({
@@ -125,7 +123,7 @@ if(Modernizr.webgl) {
 
 		//now ranges are set we can call draw the key
 		createKey(config);
-		createLegend(config)
+		// createLegend(config)
 
 
 		map.on('load', function() {
@@ -389,11 +387,12 @@ if(Modernizr.webgl) {
 		}
 
 		function setAxisVal(areanm,areaval) {
+			var lad = areanm.slice(0, areanm.lastIndexOf(' '))
 			d3.select("#keyvalue").style("font-weight","bold").html(function(){
 				if(!isNaN(areaval)) {
-					return areanm + " &#8212 " + d3.format(".3f")(areaval) + " burglaries per person.</br>1 burglary for every " + d3.format(".0f")(5*Math.round( ((1/areaval)*3) /5)) + " people over the course of one year.";
+					return "1 burglary for every " + d3.format(".0f")(5*Math.round( ((1/areaval)*3) /5)) + " people in one year in this area of " + lad + ".";
 				} else {
-					return areanm;
+					return "There is a problem with the data in this part of the Local Authority of " + lad;
 				}
 			// d3.select("#keyvalue").style("font-weight","bold")
 	  	// 	.attr("dy", "1em") // you can vary how far apart it shows up
