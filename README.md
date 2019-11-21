@@ -16,7 +16,7 @@ The following were created in QGIS:
 Tippecanoe commands
 
 To create the hover layer
-tippecanoe --minimum-zoom=9 --maximum-zoom=15 --output-to-directory tiles --no-tile-size-limit --force lsoas.geojson
+```tippecanoe --minimum-zoom=9 --maximum-zoom=15 --output-to-directory tiles --no-tile-size-limit --force lsoas.geojson```
 
 To create the building layer
 tippecanoe --minimum-zoom=4 --maximum-zoom=7 --output-to-directory tiles --full-detail=9 --drop-smallest-as-needed --extend-zooms-if-still-dropping --force burglary_max_0_05.geojson
