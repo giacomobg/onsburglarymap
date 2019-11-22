@@ -6,9 +6,9 @@
 "varunit2": "More than 1 burglary for every 60 people",
 "varunit3": "more burgled &#8594;",
 "varunit4": "more deprived &#8594;",
-"displaydecimals": 3,
-"legenddecimals": 3,
-"breaks": [0.000387898, 0.008, 0.012, 0.017, 0.024, 0.05],
+"displaydecimals": 0,
+"legenddecimals": 0,
+"breaks": [1,33,59,91,142,200],
 "dropticks": true,
 "numberBreaks":5
 }}
