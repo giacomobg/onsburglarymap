@@ -389,7 +389,7 @@ if(Modernizr.webgl) {
 		function setAxisVal(areanm,areaval) {
 			d3.select("#keyvalue").style("font-weight","bold").html(function(){
 				if(!isNaN(areaval)) {
-					return "Yearly burglaries for every 1000 people";
+					return "Yearly burglaries for every 1000 people in " + areanm;
 				} else {
 					return "No data";
 				}
@@ -621,7 +621,7 @@ if(Modernizr.webgl) {
 					// d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
 					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","15px").style("margin-top","0px").html(dvc.varunit);
 					// d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
-					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-7px").style("margin-right","20px").html(dvc.varunit2);
+					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","0px").style("margin-right","20px").html(dvc.varunit2);
 					// d3.select("#keyunits").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit3);
 
 			} // Ends create key
