@@ -526,7 +526,7 @@ if(Modernizr.webgl) {
 					var xAxis = d3.axisBottom(x)
 						.tickSize(15)
 						.tickValues(color.domain())
-						.tickFormat(legendformat);
+						.tickFormat(legendformat); // TODO: add greater than sign to final tick
 
 					var g2 = svgkey.append("g").attr("id","horiz")
 						.attr("transform", "translate(15,30)");
