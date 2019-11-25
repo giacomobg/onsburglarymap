@@ -250,7 +250,7 @@ if(Modernizr.webgl) {
 				onLeave = onLeave.debounce(100);
 			};
 
-			d3.select("#keyvalue").style("font-weight","bold").html("")
+			d3.select("#keyvalue").style("font-weight","bold").html("Yearly burglaries for every 1000 people")
 
 			//Highlight stroke on mouseover (and show area information)
 			map.on("mousemove", "lsoa-outlines", onMove);
@@ -446,7 +446,7 @@ if(Modernizr.webgl) {
 		}
 
 		function hideaxisVal() {
-			d3.select("#keyvalue").style("font-weight","bold").text("");
+			d3.select("#keyvalue").style("font-weight","bold").text("Yearly burglaries for every 1000 people");
 
 			d3.selectAll(".blocks").attr("stroke","black").attr("stroke-width","2px");
 			d3.selectAll(".legendRect").style("width","0px");
