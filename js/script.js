@@ -402,7 +402,7 @@ if(Modernizr.webgl) {
 
 			function blockLookup(areaval) {
 				for (i = 0; i <= dvc.numberBreaks; i++) {
-					if (areaval < breaks[i]) {
+					if (areaval <= breaks[i]) {
 						return i
 					}
 				}
