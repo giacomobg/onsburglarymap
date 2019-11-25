@@ -134,12 +134,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
-<<<<<<< HEAD
-						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/{z}/{x}/{y}.pbf"],
-=======
 						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles2/{z}/{x}/{y}.pbf"],
->>>>>>> feature/oneinevery
 						"minzoom": 4,
 						"maxzoom": 13
 					},
@@ -191,11 +186,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-<<<<<<< HEAD
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles/{z}/{x}/{y}.pbf"],
-=======
 						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
->>>>>>> feature/oneinevery
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -213,11 +204,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-<<<<<<< HEAD
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles/{z}/{x}/{y}.pbf"],
-=======
 						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
->>>>>>> feature/oneinevery
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
