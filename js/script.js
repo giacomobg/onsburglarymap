@@ -20,11 +20,11 @@ if(Modernizr.webgl) {
 		oldlsoa11cd = "";
 		firsthover = true;
 
-		layernames = ["burglaries_per_capita_max_0_05_burglaries_per_capita"];
-		layername = "burglaries_per_capita_max_0_05_burglaries_per_capita";
+		layernames = ["burglaries_1in1000_burglaries_per_capita"];
+		layername = "burglaries_1in1000_burglaries_per_capita";
 
-		hoverlayernames = ["burglary_per_capita_burglaries_per_capita"]
-		hoverlayername = "burglary_per_capita_burglaries_per_capita";
+		hoverlayernames = ["burglaries_1in1000_burglaries_per_capita"]
+		hoverlayername = "burglaries_1in1000_burglaries_per_capita";
 
 		windowheight = window.innerHeight;
 		d3.select("#map").style("height",windowheight + "px")
@@ -138,14 +138,14 @@ if(Modernizr.webgl) {
 						"minzoom": 4,
 						"maxzoom": 13
 					},
-					"source-layer": "burglary_max_0_05",
+					"source-layer": "burglary",
 					"background-color": "#ccc",
 					'paint': {
 							'fill-opacity':1,
 							'fill-outline-color':'rgba(0,0,0,0)',
 							'fill-color': {
 									// Refers to the data of that specific property of the polygon
-								'property': 'burglaries_per_capita_max_0_05_burglaries_per_capita',
+								'property': layername,
 								'default': '#666666',
 								// Prevents interpolation of colors between stops
 								'base': 0,
@@ -387,12 +387,11 @@ if(Modernizr.webgl) {
 		}
 
 		function setAxisVal(areanm,areaval) {
-			var lad = areanm.slice(0, areanm.lastIndexOf(' '))
 			d3.select("#keyvalue").style("font-weight","bold").html(function(){
 				if(!isNaN(areaval)) {
-					return "1 burglary for every " + d3.format(".0f")(5*Math.round( ((1/areaval)*3) /5)) + " people in one year in this area of " + lad + ".";
+					return "Yearly burglaries for every 1000 people";
 				} else {
-					return "There is a problem with the data in this part of the Local Authority of " + lad;
+					return "No data";
 				}
 			// d3.select("#keyvalue").style("font-weight","bold")
 	  	// 	.attr("dy", "1em") // you can vary how far apart it shows up
@@ -411,14 +410,16 @@ if(Modernizr.webgl) {
 			}
 			d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
 
-			function getLineX(areaval) {
+			function getLineX(areaval, upperThreshold) {
 				if(!isNaN(areaval)) {
-					if (areaval > 0.05) return x(0.05);
+					if (areaval > upperThreshold) return x(upperThreshold);
 					else return x(areaval);
 				}
 				else return x(midpoint);
 			}
-			var lineX = getLineX(areaval)
+
+			var upperThreshold = 200;
+			var lineX = getLineX(areaval, upperThreshold)
 
 			d3.select("#currLine")
 							.style("opacity", 1)
@@ -431,8 +432,8 @@ if(Modernizr.webgl) {
 						d3.select("#currVal")
 							.text(function() {
 								if(!isNaN(areaval)) {
-									if (areaval > 0.05) {
-										return "> 0.05"
+									if (areaval > upperThreshold) {
+										return "> " + upperThreshold.toString()
 									}
 									else {return displayformat(areaval)}
 								}
@@ -617,10 +618,10 @@ if(Modernizr.webgl) {
 					//Temporary	hardcode unit text
 					dvc.unittext = "change in life expectancy";
 
-					d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
-					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","2px").style("margin-top","0px").html(dvc.varunit);
-					d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
-					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-7px").style("margin-right","2px").html(dvc.varunit2);
+					// d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
+					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","15px").style("margin-top","0px").html(dvc.varunit);
+					// d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
+					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-7px").style("margin-right","20px").html(dvc.varunit2);
 					// d3.select("#keyunits").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit3);
 
 			} // Ends create key
