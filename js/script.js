@@ -133,8 +133,9 @@ if(Modernizr.webgl) {
 					'type': 'fill',
 					"source": {
 						"type": "vector",
-						"tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
-						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles/{z}/{x}/{y}.pbf"],
+						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
+						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/{z}/{x}/{y}.pbf"],
 						"minzoom": 4,
 						"maxzoom": 13
 					},
@@ -185,8 +186,8 @@ if(Modernizr.webgl) {
 					"type": "fill",
 					"source": {
 						"type": "vector",
-						"tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles2/{z}/{x}/{y}.pbf"],
+						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -203,8 +204,8 @@ if(Modernizr.webgl) {
 					"type": "line",
 					"source": {
 						"type": "vector",
-						"tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles2/{z}/{x}/{y}.pbf"],
+						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -750,51 +751,51 @@ if(Modernizr.webgl) {
 
 			}
 
-			function addLayer(layername){ // TODO: this never gets called anywhere?????
-
-
-
-				map.addLayer({
-					"id": layername,
-					'type': 'fill',
-					"source": {
-						"id":'vectorsource',
-						"type": "vector",
-						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles/{z}/{x}/{y}.pbf"],
-						"minzoom": 4,
-						"maxzoom": 13
-					},
-					"source-layer": "imddata2",
-					"background-color": "#ccc",
-					'paint': {
-							'fill-opacity':1,
-							'fill-outline-color':'rgba(0,0,0,0)',
-							'fill-color': {
-									// Refers to the data of that specific property of the polygon
-								'property': layername,
-								'default': '#666666',
-								// Prevents interpolation of colors between stops
-								'base': 0,
-								'stops': [
-									[0, '#d0587e'],
-									[1, '#d0587e'],
-									[2, '#da7b91'],
-									[3, '#e39ca5'],
-									[4, '#eabcb9'],
-									[5, '#f0dccd'],
-									[6, '#e6f5d0'],
-									[7, '#bfe4ab'],
-									[8, '#97d287'],
-									[9, '#6cc064'],
-									[10, '#37ae3f']
-
-								]
-							}
-
-						}
-				}, 'lsoa-outlines');
-			}
+			// function addLayer(layername){ // TODO: this never gets called anywhere?????
+			//
+			//
+			//
+			// 	map.addLayer({
+			// 		"id": layername,
+			// 		'type': 'fill',
+			// 		"source": {
+			// 			"id":'vectorsource',
+			// 			"type": "vector",
+			// 			// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
+			// 			"tiles": ["https://cdn.ons.gov.uk/maptiles/t18/tiles/{z}/{x}/{y}.pbf"],
+			// 			"minzoom": 4,
+			// 			"maxzoom": 13
+			// 		},
+			// 		"source-layer": "imddata2",
+			// 		"background-color": "#ccc",
+			// 		'paint': {
+			// 				'fill-opacity':1,
+			// 				'fill-outline-color':'rgba(0,0,0,0)',
+			// 				'fill-color': {
+			// 						// Refers to the data of that specific property of the polygon
+			// 					'property': layername,
+			// 					'default': '#666666',
+			// 					// Prevents interpolation of colors between stops
+			// 					'base': 0,
+			// 					'stops': [
+			// 						[0, '#d0587e'],
+			// 						[1, '#d0587e'],
+			// 						[2, '#da7b91'],
+			// 						[3, '#e39ca5'],
+			// 						[4, '#eabcb9'],
+			// 						[5, '#f0dccd'],
+			// 						[6, '#e6f5d0'],
+			// 						[7, '#bfe4ab'],
+			// 						[8, '#97d287'],
+			// 						[9, '#6cc064'],
+			// 						[10, '#37ae3f']
+			//
+			// 					]
+			// 				}
+			//
+			// 			}
+			// 	}, 'lsoa-outlines');
+			// }
 
 
 			function updatePercent(props) {
