@@ -416,7 +416,7 @@ if(Modernizr.webgl) {
 					if (areaval > 0.05) return x(0.05);
 					else return x(areaval);
 				}
-				else return x(midpoint);
+				else return -1000; // this is just a number that should be off the scale -- simple but bit messy and unreliable, should be using opacity
 			}
 			var lineX = getLineX(areaval)
 
@@ -440,7 +440,7 @@ if(Modernizr.webgl) {
 							})
 							.transition()
 							.duration(400)
-							.attr("x", lineX);
+							.attr("x", function() {if (lineX == -1000) return x(midpoint); else return getLineX;});
 
 		}
 
