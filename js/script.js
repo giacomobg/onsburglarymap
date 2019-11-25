@@ -441,7 +441,7 @@ if(Modernizr.webgl) {
 							})
 							.transition()
 							.duration(400)
-							.attr("x", function() {if (lineX == -1000) return x(midpoint); else return getLineX;});
+							.attr("x", function() {if (lineX == -1000) return x(midpoint); else return lineX;});
 
 		}
 
