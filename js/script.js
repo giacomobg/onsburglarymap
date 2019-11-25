@@ -619,10 +619,10 @@ if(Modernizr.webgl) {
 					dvc.unittext = "change in life expectancy";
 
 					// d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
-					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","15px").style("margin-top","0px").html(dvc.varunit);
+					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","15px").style("margin-top","-5px").html(dvc.varunit);
 					// d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
-					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","0px").style("margin-right","20px").html(dvc.varunit2);
-					// d3.select("#keyunits").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit3);
+					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-5px").style("margin-right","20px").html(dvc.varunit2);
+					d3.select("#keyunits2").append("p").attr("width","100%").style("text-align","center").style("margin-top","0px").style("margin-right","18px").html(dvc.varunit3);
 
 			} // Ends create key
 
