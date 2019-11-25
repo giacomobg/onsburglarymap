@@ -20,11 +20,11 @@ if(Modernizr.webgl) {
 		oldlsoa11cd = "";
 		firsthover = true;
 
-		layernames = ["burglaries_per_capita_max_0_05_burglaries_per_capita"];
-		layername = "burglaries_per_capita_max_0_05_burglaries_per_capita";
+		layernames = ["burglaries_1in1000_burglaries_per_capita"];
+		layername = "burglaries_1in1000_burglaries_per_capita";
 
-		hoverlayernames = ["burglary_per_capita_burglaries_per_capita"]
-		hoverlayername = "burglary_per_capita_burglaries_per_capita";
+		hoverlayernames = ["burglaries_1in1000_burglaries_per_capita"]
+		hoverlayername = "burglaries_1in1000_burglaries_per_capita";
 
 		windowheight = window.innerHeight;
 		d3.select("#map").style("height",windowheight + "px")
@@ -134,19 +134,23 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
+<<<<<<< HEAD
 						// "tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles/{z}/{x}/{y}.pbf"],
 						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/{z}/{x}/{y}.pbf"],
+=======
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles2/{z}/{x}/{y}.pbf"],
+>>>>>>> feature/oneinevery
 						"minzoom": 4,
 						"maxzoom": 13
 					},
-					"source-layer": "burglary_max_0_05",
+					"source-layer": "burglary",
 					"background-color": "#ccc",
 					'paint': {
 							'fill-opacity':1,
 							'fill-outline-color':'rgba(0,0,0,0)',
 							'fill-color': {
 									// Refers to the data of that specific property of the polygon
-								'property': 'burglaries_per_capita_max_0_05_burglaries_per_capita',
+								'property': layername,
 								'default': '#666666',
 								// Prevents interpolation of colors between stops
 								'base': 0,
@@ -187,7 +191,11 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
+<<<<<<< HEAD
 						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles/{z}/{x}/{y}.pbf"],
+=======
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
+>>>>>>> feature/oneinevery
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -205,7 +213,11 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
+<<<<<<< HEAD
 						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles/{z}/{x}/{y}.pbf"],
+=======
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
+>>>>>>> feature/oneinevery
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -251,7 +263,7 @@ if(Modernizr.webgl) {
 				onLeave = onLeave.debounce(100);
 			};
 
-			d3.select("#keyvalue").style("font-weight","bold").html("")
+			d3.select("#keyvalue").style("font-weight","bold").html("Yearly burglaries for every 1000 people")
 
 			//Highlight stroke on mouseover (and show area information)
 			map.on("mousemove", "lsoa-outlines", onMove);
@@ -388,12 +400,11 @@ if(Modernizr.webgl) {
 		}
 
 		function setAxisVal(areanm,areaval) {
-			var lad = areanm.slice(0, areanm.lastIndexOf(' '))
 			d3.select("#keyvalue").style("font-weight","bold").html(function(){
 				if(!isNaN(areaval)) {
-					return "1 burglary for every " + d3.format(".0f")(5*Math.round( ((1/areaval)*3) /5)) + " people in one year in this area of " + lad + ".";
+					return "Yearly burglaries for every 1000 people in " + areanm;
 				} else {
-					return "There is a problem with the data in this part of the Local Authority of " + lad;
+					return "No data";
 				}
 			// d3.select("#keyvalue").style("font-weight","bold")
 	  	// 	.attr("dy", "1em") // you can vary how far apart it shows up
@@ -412,14 +423,16 @@ if(Modernizr.webgl) {
 			}
 			d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
 
-			function getLineX(areaval) {
+			function getLineX(areaval, upperThreshold) {
 				if(!isNaN(areaval)) {
-					if (areaval > 0.05) return x(0.05);
+					if (areaval > upperThreshold) return x(upperThreshold);
 					else return x(areaval);
 				}
 				else return -1000; // this is just a number that should be off the scale -- simple but bit messy and unreliable, should be using opacity
 			}
-			var lineX = getLineX(areaval)
+
+			var upperThreshold = 200;
+			var lineX = getLineX(areaval, upperThreshold)
 
 			d3.select("#currLine")
 							.style("opacity", 1)
@@ -432,8 +445,8 @@ if(Modernizr.webgl) {
 						d3.select("#currVal")
 							.text(function() {
 								if(!isNaN(areaval)) {
-									if (areaval > 0.05) {
-										return "> 0.05"
+									if (areaval > upperThreshold) {
+										return "> " + upperThreshold.toString()
 									}
 									else {return displayformat(areaval)}
 								}
@@ -446,7 +459,7 @@ if(Modernizr.webgl) {
 		}
 
 		function hideaxisVal() {
-			d3.select("#keyvalue").style("font-weight","bold").text("");
+			d3.select("#keyvalue").style("font-weight","bold").text("Yearly burglaries for every 1000 people");
 
 			d3.selectAll(".blocks").attr("stroke","black").attr("stroke-width","2px");
 			d3.selectAll(".legendRect").style("width","0px");
@@ -618,11 +631,11 @@ if(Modernizr.webgl) {
 					//Temporary	hardcode unit text
 					dvc.unittext = "change in life expectancy";
 
-					d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
-					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","2px").style("margin-top","0px").html(dvc.varunit);
-					d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
-					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-7px").style("margin-right","2px").html(dvc.varunit2);
-					// d3.select("#keyunits").append("p").attr("width","100%").style("text-align","center").style("margin-top","-10px").style("margin-right","18px").html(dvc.varunit3);
+					// d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
+					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","15px").style("margin-top","-5px").html(dvc.varunit);
+					// d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
+					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-5px").style("margin-right","20px").html(dvc.varunit2);
+					d3.select("#keyunits2").append("p").attr("width","100%").style("text-align","center").style("margin-top","0px").style("margin-right","18px").html(dvc.varunit3);
 
 			} // Ends create key
 
