@@ -410,21 +410,20 @@ if(Modernizr.webgl) {
 			}
 			d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
 
-			function getLineX(areaval, upperThreshold) {
+			function getLineX(areaval) {
 				if(!isNaN(areaval)) {
-					if (areaval > upperThreshold) return x(upperThreshold);
-					else return x(areaval);
+					return x(areaval);
 				}
 				else return x(midpoint);
 			}
 
 			var upperThreshold = 200;
-			var lineX = getLineX(areaval, upperThreshold)
+			var lineX = getLineX(areaval)
 
 			d3.select("#currLine")
-							.style("opacity", 1)
 							.transition()
 							.duration(400)
+							.style("opacity", function() {if (areaval > upperThreshold) return 0; else return 1;})
 							.attr("x1", lineX)
 							.attr("x2", lineX);
 
@@ -432,16 +431,13 @@ if(Modernizr.webgl) {
 						d3.select("#currVal")
 							.text(function() {
 								if(!isNaN(areaval)) {
-									if (areaval > upperThreshold) {
-										return "> " + upperThreshold.toString()
-									}
-									else {return displayformat(areaval)}
+									return displayformat(areaval)
 								}
 								else {return "Data unavailable"}
 							})
 							.transition()
 							.duration(400)
-							.attr("x", lineX);
+							.attr("x", function() {if (areaval > upperThreshold) return x(upperThreshold); else return lineX;});
 
 		}
 
@@ -526,7 +522,7 @@ if(Modernizr.webgl) {
 					var xAxis = d3.axisBottom(x)
 						.tickSize(15)
 						.tickValues(color.domain())
-						.tickFormat(legendformat); // TODO: add greater than sign to final tick
+						.tickFormat(function(d) {if (d == breaks[-1]) return "> " + breaks[-1]; else return d}); // TODO: add greater than sign to final tick
 
 					var g2 = svgkey.append("g").attr("id","horiz")
 						.attr("transform", "translate(15,30)");
@@ -800,22 +796,22 @@ if(Modernizr.webgl) {
 
 			function updatePercent(props) {
 
-//"Income","Employment","Education","Health","Crime",	"Environment"],
-		Deprivation = 2//Math.ceil(props.properties/3475); // TODO: bind the deprivation decile to the
-		HousePrices = 1;
-		// Income = 11 - props.properties.imddata_imddata__3;
-		// Employment = 11 -props.properties.imddata_imddata__4;
-		// Education =	11 -props.properties.imddata_imddata__5;
-		// Health = 11 - props.properties.imddata_imddata__6;
-		// Crime =	11 - props.properties.imddata_imddata__7;
-		// Housing =	11 - props.properties.imddata_imddata__8;
-		// Environment= 11 - props.properties.imddata_imddata__9;
-
-				percentages = [Deprivation, HousePrices];
-				percentages.forEach(function(d,i) {
-					barwidth = parseInt(d3.select("#bars").style("width"));
-					d3.select("#legendRect" + i).transition().duration(300).style("width", (((barwidth-20)/10)-2) + "px").style("left", (((percentages[i]-1)*((barwidth-20)/10))) + "px");
-				});
+// //"Income","Employment","Education","Health","Crime",	"Environment"],
+// 		Deprivation = 2//Math.ceil(props.properties/3475); // TODO: bind the deprivation decile to the
+// 		HousePrices = 1;
+// 		// Income = 11 - props.properties.imddata_imddata__3;
+// 		// Employment = 11 -props.properties.imddata_imddata__4;
+// 		// Education =	11 -props.properties.imddata_imddata__5;
+// 		// Health = 11 - props.properties.imddata_imddata__6;
+// 		// Crime =	11 - props.properties.imddata_imddata__7;
+// 		// Housing =	11 - props.properties.imddata_imddata__8;
+// 		// Environment= 11 - props.properties.imddata_imddata__9;
+//
+// 				percentages = [Deprivation, HousePrices];
+// 				percentages.forEach(function(d,i) {
+// 					barwidth = parseInt(d3.select("#bars").style("width"));
+// 					d3.select("#legendRect" + i).transition().duration(300).style("width", (((barwidth-20)/10)-2) + "px").style("left", (((percentages[i]-1)*((barwidth-20)/10))) + "px");
+// 				});
 
 
 
