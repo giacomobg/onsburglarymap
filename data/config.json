@@ -10,5 +10,6 @@
 "legenddecimals": 0,
 "breaks": [0,4,8,14,34,50],
 "dropticks": true,
-"numberBreaks":5
+"numberBreaks":5,
+"hosted": "aws"
 }}

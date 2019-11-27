@@ -129,13 +129,22 @@ if(Modernizr.webgl) {
 
 		map.on('load', function() {
 
+			if (dvc.hosted == "aws") {
+				var tileURL = ["https://cdn.ons.gov.uk/maptiles/t20/tiles4/{z}/{x}/{y}.pbf"];
+				var lsoatileURL = ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"];
+			}
+			else if (dvc.hosted == "locally") {
+				var tileURL = ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"];
+				var lsoatileURL = ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"];
+			}
+			else console.log('config.hosted must be set to "locally" or "aws"');
+
 				map.addLayer({
 					"id": "imdlayer",
 					'type': 'fill',
 					"source": {
 						"type": "vector",
-						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles3/{z}/{x}/{y}.pbf"],
+						"tiles": tileURL,
 						"minzoom": 4,
 						"maxzoom": 13
 					},
@@ -186,8 +195,7 @@ if(Modernizr.webgl) {
 					"type": "fill",
 					"source": {
 						"type": "vector",
-						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"],
+						"tiles": lsoatileURL,
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -204,8 +212,7 @@ if(Modernizr.webgl) {
 					"type": "line",
 					"source": {
 						"type": "vector",
-						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"],
+						"tiles": lsoatileURL,
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
