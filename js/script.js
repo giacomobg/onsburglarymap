@@ -438,11 +438,7 @@ if(Modernizr.webgl) {
 							})
 							.transition()
 							.duration(400)
-<<<<<<< HEAD
-							.attr("x", function() {if (lineX == -1000) return x(midpoint); else return lineX;});
-=======
 							.attr("x", function() {if (areaval > upperThreshold) return x(upperThreshold); else return lineX;});
->>>>>>> feature/oneinevery
 
 		}
 
