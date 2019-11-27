@@ -8,7 +8,7 @@
 "varunit4": "more deprived &#8594;",
 "displaydecimals": 0,
 "legenddecimals": 0,
-"breaks": [1,33,59,91,142,200],
+"breaks": [0,5,9,16,38,50],
 "dropticks": true,
 "numberBreaks":5
 }}

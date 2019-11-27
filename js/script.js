@@ -125,6 +125,7 @@ if(Modernizr.webgl) {
 		createKey(config);
 		// createLegend(config)
 
+		map.on('zoom', function() {console.log(map.getZoom())})
 
 		map.on('load', function() {
 
@@ -134,7 +135,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles3/{z}/{x}/{y}.pbf"],
 						"minzoom": 4,
 						"maxzoom": 13
 					},
@@ -186,7 +187,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -204,7 +205,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -522,7 +523,7 @@ if(Modernizr.webgl) {
 					var xAxis = d3.axisBottom(x)
 						.tickSize(15)
 						.tickValues(color.domain())
-						.tickFormat(function(d) {if (d == breaks[-1]) return "> " + breaks[-1]; else return d}); // TODO: add greater than sign to final tick
+						.tickFormat(function(d) {if (d == breaks[breaks.length-1]) return "> " + d; else return d});
 
 					var g2 = svgkey.append("g").attr("id","horiz")
 						.attr("transform", "translate(15,30)");
