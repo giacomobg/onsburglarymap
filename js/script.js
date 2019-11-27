@@ -415,10 +415,10 @@ if(Modernizr.webgl) {
 				if(!isNaN(areaval)) {
 					return x(areaval);
 				}
-				else return -1000; // this is just a number that should be off the scale -- simple but bit messy and unreliable, should be using opacity
+				else return x(midpoint);
 			}
 
-			var upperThreshold = 200;
+			var upperThreshold = breaks[breaks.length-1];
 			var lineX = getLineX(areaval)
 
 			d3.select("#currLine")
