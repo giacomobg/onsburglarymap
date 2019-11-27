@@ -125,6 +125,7 @@ if(Modernizr.webgl) {
 		createKey(config);
 		// createLegend(config)
 
+		map.on('zoom', function() {console.log(map.getZoom())})
 
 		map.on('load', function() {
 
@@ -134,7 +135,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/tiles3/{z}/{x}/{y}.pbf"],
 						"minzoom": 4,
 						"maxzoom": 13
 					},
@@ -186,7 +187,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -204,7 +205,7 @@ if(Modernizr.webgl) {
 					"source": {
 						"type": "vector",
 						// "tiles": ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"],
-						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles2/{z}/{x}/{y}.pbf"],
+						"tiles": ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"],
 						"minzoom": 10
 					},
 					"source-layer": "lsoas",
@@ -402,7 +403,7 @@ if(Modernizr.webgl) {
 
 			function blockLookup(areaval) {
 				for (i = 0; i <= dvc.numberBreaks; i++) {
-					if (areaval < breaks[i]) {
+					if (areaval <= breaks[i]) {
 						return i
 					}
 				}
@@ -410,21 +411,20 @@ if(Modernizr.webgl) {
 			}
 			d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
 
-			function getLineX(areaval, upperThreshold) {
+			function getLineX(areaval) {
 				if(!isNaN(areaval)) {
-					if (areaval > upperThreshold) return x(upperThreshold);
-					else return x(areaval);
+					return x(areaval);
 				}
 				else return -1000; // this is just a number that should be off the scale -- simple but bit messy and unreliable, should be using opacity
 			}
 
 			var upperThreshold = 200;
-			var lineX = getLineX(areaval, upperThreshold)
+			var lineX = getLineX(areaval)
 
 			d3.select("#currLine")
-							.style("opacity", 1)
 							.transition()
 							.duration(400)
+							.style("opacity", function() {if (areaval > upperThreshold) return 0; else return 1;})
 							.attr("x1", lineX)
 							.attr("x2", lineX);
 
@@ -432,16 +432,17 @@ if(Modernizr.webgl) {
 						d3.select("#currVal")
 							.text(function() {
 								if(!isNaN(areaval)) {
-									if (areaval > upperThreshold) {
-										return "> " + upperThreshold.toString()
-									}
-									else {return displayformat(areaval)}
+									return displayformat(areaval)
 								}
 								else {return "Data unavailable"}
 							})
 							.transition()
 							.duration(400)
+<<<<<<< HEAD
 							.attr("x", function() {if (lineX == -1000) return x(midpoint); else return lineX;});
+=======
+							.attr("x", function() {if (areaval > upperThreshold) return x(upperThreshold); else return lineX;});
+>>>>>>> feature/oneinevery
 
 		}
 
@@ -526,7 +527,7 @@ if(Modernizr.webgl) {
 					var xAxis = d3.axisBottom(x)
 						.tickSize(15)
 						.tickValues(color.domain())
-						.tickFormat(legendformat);
+						.tickFormat(function(d) {if (d == breaks[breaks.length-1]) return "> " + d; else return d});
 
 					var g2 = svgkey.append("g").attr("id","horiz")
 						.attr("transform", "translate(15,30)");
@@ -800,22 +801,22 @@ if(Modernizr.webgl) {
 
 			function updatePercent(props) {
 
-//"Income","Employment","Education","Health","Crime",	"Environment"],
-		Deprivation = 2//Math.ceil(props.properties/3475); // TODO: bind the deprivation decile to the
-		HousePrices = 1;
-		// Income = 11 - props.properties.imddata_imddata__3;
-		// Employment = 11 -props.properties.imddata_imddata__4;
-		// Education =	11 -props.properties.imddata_imddata__5;
-		// Health = 11 - props.properties.imddata_imddata__6;
-		// Crime =	11 - props.properties.imddata_imddata__7;
-		// Housing =	11 - props.properties.imddata_imddata__8;
-		// Environment= 11 - props.properties.imddata_imddata__9;
-
-				percentages = [Deprivation, HousePrices];
-				percentages.forEach(function(d,i) {
-					barwidth = parseInt(d3.select("#bars").style("width"));
-					d3.select("#legendRect" + i).transition().duration(300).style("width", (((barwidth-20)/10)-2) + "px").style("left", (((percentages[i]-1)*((barwidth-20)/10))) + "px");
-				});
+// //"Income","Employment","Education","Health","Crime",	"Environment"],
+// 		Deprivation = 2//Math.ceil(props.properties/3475); // TODO: bind the deprivation decile to the
+// 		HousePrices = 1;
+// 		// Income = 11 - props.properties.imddata_imddata__3;
+// 		// Employment = 11 -props.properties.imddata_imddata__4;
+// 		// Education =	11 -props.properties.imddata_imddata__5;
+// 		// Health = 11 - props.properties.imddata_imddata__6;
+// 		// Crime =	11 - props.properties.imddata_imddata__7;
+// 		// Housing =	11 - props.properties.imddata_imddata__8;
+// 		// Environment= 11 - props.properties.imddata_imddata__9;
+//
+// 				percentages = [Deprivation, HousePrices];
+// 				percentages.forEach(function(d,i) {
+// 					barwidth = parseInt(d3.select("#bars").style("width"));
+// 					d3.select("#legendRect" + i).transition().duration(300).style("width", (((barwidth-20)/10)-2) + "px").style("left", (((percentages[i]-1)*((barwidth-20)/10))) + "px");
+// 				});
 
 
 
