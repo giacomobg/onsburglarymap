@@ -46,6 +46,29 @@ if(Modernizr.webgl) {
 		});
 
 
+		function detectIE() {
+			var ua = window.navigator.userAgent;
+			var msie = ua.indexOf('MSIE ');
+			if (msie > 0) {
+			// IE 10 or older => return version number
+			return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+			}
+			var trident = ua.indexOf('Trident/');
+			if (trident > 0) {
+			// IE 11 => return version number
+			var rv = ua.indexOf('rv:');
+			return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+			}
+			var edge = ua.indexOf('Edge/');
+			if (edge > 0) {
+			// Edge (IE 12+) => return version number
+			return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+			}
+			// other browser
+			return false;
+		}
+
+
 		// Set up maps
 		mapLeft = new mapboxgl.Map({
 		  container: 'mapLeft', // container id
@@ -164,17 +187,17 @@ if(Modernizr.webgl) {
 
 		mapLeft.on('zoom', function() {console.log(mapLeft.getZoom())})
 
-		mapLeft.on('load', function() {
+		if (dvc.hosted == "aws") {
+			tileURL = ["https://cdn.ons.gov.uk/maptiles/t20/tiles4/{z}/{x}/{y}.pbf"];
+			lsoatileURL = ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"];
+		}
+		else if (dvc.hosted == "locally") {
+			tileURL = ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"];
+			lsoatileURL = ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"];
+		}
+		else console.log('config.hosted must be set to "locally" or "aws"');
 
-			if (dvc.hosted == "aws") {
-				var tileURL = ["https://cdn.ons.gov.uk/maptiles/t20/tiles4/{z}/{x}/{y}.pbf"];
-				var lsoatileURL = ["https://cdn.ons.gov.uk/maptiles/t20/lsoatiles3/{z}/{x}/{y}.pbf"];
-			}
-			else if (dvc.hosted == "locally") {
-				var tileURL = ["http://localhost:8000/tiles/{z}/{x}/{y}.pbf"];
-				var lsoatileURL = ["http://localhost:8000/lsoatiles/{z}/{x}/{y}.pbf"];
-			}
-			else console.log('config.hosted must be set to "locally" or "aws"');
+		mapLeft.on('load', function() {
 
 				mapLeft.addLayer({
 					"id": "imdlayer",
@@ -203,25 +226,6 @@ if(Modernizr.webgl) {
 							//"varcolour": ["#37ae3f", "#6cc064", "#97d287", "#bfe4ab", "#e6f5d0","#f0dccd","#eabcb9","#e39ca5","#da7b91","#d0587e"],
 
 								'stops': stops
-								// [
-								// 	// [0, '#15534C'],
-								// 	// [0.0129683, '#15534C'], // jenks
-								// 	// [0.024633822, '#30785B'],
-								// 	// [0.043992121, '#5D9D61'],
-								// 	// [0.104316547, '#99C160'],
-								// 	// [0.544303797, '#E2E062']
-								// 	// [0.00702, '#15534C'], // equal breaks
-								// 	// [0.0109, '#30785B'],
-								// 	// [0.0156, '#5D9D61'],
-								// 	// [0.0226, '#99C160'],
-								// 	// [0.5443, '#E2E062']
-								// 	[0.000387898, '#15534C'], // k-quintiles
-								// 	[0.007729469, '#15534C'],
-								// 	[0.012013455, '#30785B'],
-								// 	[0.016914403, '#5D9D61'],
-								// 	[0.024421594, '#99C160'],
-								// 	[0.544303797, '#E2E062']
-								// ]
 							}
 
 						}
@@ -261,35 +265,9 @@ if(Modernizr.webgl) {
 					"filter": ["==", "lsoa11cd", ""]
 				}, 'place_suburb');
 
+
+
 			//test whether ie or not
-			function detectIE() {
-			  var ua = window.navigator.userAgent;
-
-
-			  var msie = ua.indexOf('MSIE ');
-			  if (msie > 0) {
-				// IE 10 or older => return version number
-				return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-			  }
-
-			  var trident = ua.indexOf('Trident/');
-			  if (trident > 0) {
-				// IE 11 => return version number
-				var rv = ua.indexOf('rv:');
-				return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-			  }
-
-			  var edge = ua.indexOf('Edge/');
-			  if (edge > 0) {
-				// Edge (IE 12+) => return version number
-				return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-			  }
-
-			  // other browser
-			  return false;
-			}
-
-
 			if(detectIE()){
 				onMove = onMove.debounce(100);
 				onLeave = onLeave.debounce(100);
@@ -314,6 +292,170 @@ if(Modernizr.webgl) {
 
 
 })
+
+mapRight.on('load', function() {
+
+		mapRight.addLayer({
+			"id": "imdlayer",
+			'type': 'fill',
+			"source": {
+				"type": "vector",
+				"tiles": tileURL,
+				"minzoom": 4,
+				"maxzoom": 13
+			},
+			"source-layer": "burglary",
+			"background-color": "#ccc",
+			'paint': {
+					'fill-opacity':1,
+					'fill-outline-color':'rgba(0,0,0,0)',
+					'fill-color': {
+							// Refers to the data of that specific property of the polygon
+						'property': layername,
+						'default': '#666666',
+						// Prevents interpolation of colors between stops
+						'base': 0,
+					//	"varcolour": ["#276419","#4d9221","#7fbc41","#b8e186","#e6f5d0","#e5b9ad","#dfa2a1","#da8b95","#d5728a","#d0587e"],
+
+					//	"varcolour": ["#009392","#55a49d","#88b4a7","#aec5b2","#cfd8bd","#eacfb9","#e4b3aa","#dc979b","#d6798d","#d0587e"],
+					//	"varcolour": ["#798234","#939956","#acb178","#c7c99c","#e2e2bf","#e5b9ad","#dfa2a1","#da8b95","#d5728a","#d0587e"],
+					//"varcolour": ["#37ae3f", "#6cc064", "#97d287", "#bfe4ab", "#e6f5d0","#f0dccd","#eabcb9","#e39ca5","#da7b91","#d0587e"],
+
+						'stops': stops
+					}
+
+				}
+		}, 'place_suburb');
+
+		mapRight.addLayer({
+			"id": "lsoa-outlines",
+			"type": "fill",
+			"source": {
+				"type": "vector",
+				"tiles": lsoatileURL,
+				"minzoom": 10
+			},
+			"source-layer": "lsoas",
+			"layout": {},
+			'paint': {
+					'fill-opacity':0,
+					'fill-outline-color':'rgba(0,0,0,0)',
+					'fill-color': "#fff"
+				},
+		}, 'place_suburb');
+
+		mapRight.addLayer({
+			"id": "lsoa-outlines-hover",
+			"type": "line",
+			"source": {
+				"type": "vector",
+				"tiles": lsoatileURL,
+				"minzoom": 10
+			},
+			"source-layer": "lsoas",
+			"layout": {},
+			"paint": {
+				"line-color": "aqua",
+				"line-width": 3
+			},
+			"filter": ["==", "lsoa11cd", ""]
+		}, 'place_suburb');
+
+
+
+	//test whether ie or not
+	// function detectIE() {
+	// 	var ua = window.navigator.userAgent;
+	//
+	//
+	// 	var msie = ua.indexOf('MSIE ');
+	// 	if (msie > 0) {
+	// 	// IE 10 or older => return version number
+	// 	return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+	// 	}
+	//
+	// 	var trident = ua.indexOf('Trident/');
+	// 	if (trident > 0) {
+	// 	// IE 11 => return version number
+	// 	var rv = ua.indexOf('rv:');
+	// 	return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+	// 	}
+	//
+	// 	var edge = ua.indexOf('Edge/');
+	// 	if (edge > 0) {
+	// 	// Edge (IE 12+) => return version number
+	// 	return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+	// 	}
+	//
+	// 	// other browser
+	// 	return false;
+	// }
+
+
+	if(detectIE()){
+		onMove = onMove.debounce(100);
+		onLeave = onLeave.debounce(100);
+	};
+
+	//Highlight stroke on mouseover (and show area information)
+	mapRight.on("mousemove", "lsoa-outlines", onMove);
+
+	// Reset the lsoa-fills-hover layer's filter when the mouse leaves the layer.
+	mapRight.on("mouseleave", "lsoa-outlines", onLeave);
+
+	mapRight.getCanvasContainer().style.cursor = 'pointer';
+
+	//Add click event
+	mapRight.on('click', 'lsoa-outlines', onClick);
+
+	//get location on click
+	d3.select(".mapboxgl-ctrl-geolocate").on("click", geolocate);
+
+
+}) // end of set up mapRight
+
+if(parseInt(d3.select('body').style("width"))<600){
+new mapboxgl.Compare(mapLeft, mapRight);
+d3.select("#mapLeft").style("top","150px")
+d3.select("#mapRight").style("top","150px")
+}else{
+
+
+//from http://bl.ocks.org/boeric/f6ddea14600dc5093506
+// coordination between the two maps
+	var disable = false;
+	mapLeft.on("move", function() {
+		if (!disable) {
+			var center = mapLeft.getCenter();
+			var zoom = mapLeft.getZoom();
+			var pitch = mapLeft.getPitch();
+			var bearing = mapLeft.getBearing();
+
+			disable = true;
+			mapRight.setCenter(center);
+			mapRight.setZoom(zoom);
+			mapRight.setPitch(pitch);
+			mapRight.setBearing(bearing);
+			disable = false;
+		}
+	})
+
+	mapRight.on("move", function() {
+		if (!disable) {
+			var center = mapRight.getCenter();
+			var zoom = mapRight.getZoom();
+			var pitch = mapRight.getPitch();
+			var bearing = mapRight.getBearing();
+
+			disable = true;
+			mapLeft.setCenter(center);
+			mapLeft.setZoom(zoom);
+			mapLeft.setPitch(pitch);
+			mapLeft.setBearing(bearing);
+			disable = false;
+		}
+	})
+}
 
 		$(".search-control").click(function() {
 			$(".search-control").val('');
@@ -783,7 +925,7 @@ if(Modernizr.webgl) {
 						}
 
 				//repaint area layer map usign the styles above
-				map.setPaintProperty("imdlayer", 'fill-color', styleObject);
+				mapLeft.setPaintProperty("imdlayer", 'fill-color', styleObject);
 
 				if(typeof features !== 'undefined' ) {
  				 setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayername]);
@@ -872,6 +1014,7 @@ if(Modernizr.webgl) {
 
 	function setbodyheight() {
 		d3.select("#mapLeft").style("height","100%");
+		d3.select("#mapRight").style("height","100%");
 
 		document.addEventListener('webkitfullscreenchange', exitHandler, false);
 		document.addEventListener('mozfullscreenchange', exitHandler, false);

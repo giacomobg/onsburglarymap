@@ -47,11 +47,17 @@
 	}
 
 	@media (min-width: 599px) {
-		#map {
-			min-height: 500px; */
-			width: 100%;
+		#mapLeft, #mapRight {
+			width: 50%;
 		}
 
+    #mapRight {
+      left :50%
+    }
+
+    /* #map {
+      right:50%
+    } */
 		#selectNav {
 			position:absolute;
 			top:0px;
@@ -91,7 +97,7 @@
    }
 
 
-	  #mapLeft #mapRight {
+	  #mapLeft, #mapRight {
 			top:0px;
 			margin-top:185px;
 			height: 350px;
@@ -331,7 +337,6 @@
       </details>
     </div> -->
   </div>
-</div>
 
 <div id="source">
 <h6>Source: <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" target="_blank">Ministry of Housing, Communities & Local Government</a></h6>
