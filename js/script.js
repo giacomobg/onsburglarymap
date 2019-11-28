@@ -27,7 +27,7 @@ if(Modernizr.webgl) {
 		hoverlayername = "burglaries_1in1000_burglaries_per_capita";
 
 		windowheight = window.innerHeight;
-		d3.select("#map").style("height",windowheight + "px")
+		d3.select("#mapLeft").style("height",windowheight + "px")
 
 		//set title of page
 		//Need to test that this shows up in GA
@@ -44,39 +44,76 @@ if(Modernizr.webgl) {
 		stops = breaksSliced.map(function(x, i) {
 			return [x, dvc.varcolour[i]]
 		});
-		//set up basemap
-		map = new mapboxgl.Map({
-		  container: 'map', // container id
+
+
+		// Set up maps
+		mapLeft = new mapboxgl.Map({
+		  container: 'mapLeft', // container id
 		  style: 'data/style.json', //stylesheet location
 			//style: 'https://s3-eu-west-1.amazonaws.com/tiles.os.uk/v2/styles/open-zoomstack-night/style.json',
 		  center: [-1.27, 50.8106], // starting position51.5074° N, 0.127850.910637,-1.27441
 		  zoom:10, // starting zoom
 		  minZoom:4,
-			maxZoom: 17, //
+			maxZoom: 17,
 		  attributionControl: false
 		});
 		//add fullscreen option
-		map.addControl(new mapboxgl.FullscreenControl());
+		mapLeft.addControl(new mapboxgl.FullscreenControl());
 
 		// Add zoom and rotation controls to the map.
-		map.addControl(new mapboxgl.NavigationControl());
+		mapLeft.addControl(new mapboxgl.NavigationControl());
 
 		// Disable map rotation using right click + drag
-		map.dragRotate.disable();
+		mapLeft.dragRotate.disable();
 
 		// Disable map rotation using touch rotation gesture
-		map.touchZoomRotate.disableRotation();
+		mapLeft.touchZoomRotate.disableRotation();
 
 
 		// Add geolocation controls to the map.
-		map.addControl(new mapboxgl.GeolocateControl({
+		mapLeft.addControl(new mapboxgl.GeolocateControl({
 			positionOptions: {
 				enableHighAccuracy: true
 			}
 		}));
 
 		//add compact attribution
-		map.addControl(new mapboxgl.AttributionControl({
+		mapLeft.addControl(new mapboxgl.AttributionControl({
+			compact: true
+		}));
+
+		mapRight = new mapboxgl.Map({
+		  container: 'mapRight', // container id
+		  style: 'data/style.json', //stylesheet location
+			center: [-1.27, 50.8106], // starting position51.5074° N, 0.127850.910637,-1.27441
+		  zoom:10, // starting zoom
+		  minZoom:4,
+			maxZoom: 17,
+		  attributionControl: false
+		});
+
+		//add fullscreen option
+		mapRight.addControl(new mapboxgl.FullscreenControl());
+
+		// Add zoom and rotation controls to the map.
+		mapRight.addControl(new mapboxgl.NavigationControl());
+
+		// Disable map rotation using right click + drag
+		mapRight.dragRotate.disable();
+
+		// Disable map rotation using touch rotation gesture
+		mapRight.touchZoomRotate.disableRotation();
+
+
+		// Add geolocation controls to the map.
+		mapRight.addControl(new mapboxgl.GeolocateControl({
+			positionOptions: {
+				enableHighAccuracy: true
+			}
+		}));
+
+		//add compact attribution
+		mapRight.addControl(new mapboxgl.AttributionControl({
 			compact: true
 		}));
 
@@ -125,9 +162,9 @@ if(Modernizr.webgl) {
 		createKey(config);
 		// createLegend(config)
 
-		map.on('zoom', function() {console.log(map.getZoom())})
+		mapLeft.on('zoom', function() {console.log(mapLeft.getZoom())})
 
-		map.on('load', function() {
+		mapLeft.on('load', function() {
 
 			if (dvc.hosted == "aws") {
 				var tileURL = ["https://cdn.ons.gov.uk/maptiles/t20/tiles4/{z}/{x}/{y}.pbf"];
@@ -139,7 +176,7 @@ if(Modernizr.webgl) {
 			}
 			else console.log('config.hosted must be set to "locally" or "aws"');
 
-				map.addLayer({
+				mapLeft.addLayer({
 					"id": "imdlayer",
 					'type': 'fill',
 					"source": {
@@ -190,7 +227,7 @@ if(Modernizr.webgl) {
 						}
 				}, 'place_suburb');
 
-				map.addLayer({
+				mapLeft.addLayer({
 					"id": "lsoa-outlines",
 					"type": "fill",
 					"source": {
@@ -207,7 +244,7 @@ if(Modernizr.webgl) {
 						},
 				}, 'place_suburb');
 
-				map.addLayer({
+				mapLeft.addLayer({
 					"id": "lsoa-outlines-hover",
 					"type": "line",
 					"source": {
@@ -261,15 +298,15 @@ if(Modernizr.webgl) {
 			d3.select("#keyvalue").style("font-weight","bold").html("Yearly burglaries for every 1000 people")
 
 			//Highlight stroke on mouseover (and show area information)
-			map.on("mousemove", "lsoa-outlines", onMove);
+			mapLeft.on("mousemove", "lsoa-outlines", onMove);
 
 			// Reset the lsoa-fills-hover layer's filter when the mouse leaves the layer.
-			map.on("mouseleave", "lsoa-outlines", onLeave);
+			mapLeft.on("mouseleave", "lsoa-outlines", onLeave);
 
-			map.getCanvasContainer().style.cursor = 'pointer';
+			mapLeft.getCanvasContainer().style.cursor = 'pointer';
 
 			//Add click event
-			map.on('click', 'lsoa-outlines', onClick);
+			mapLeft.on('click', 'lsoa-outlines', onClick);
 
 			//get location on click
 			d3.select(".mapboxgl-ctrl-geolocate").on("click", geolocate);
@@ -324,12 +361,12 @@ if(Modernizr.webgl) {
 
 				if(newlsoa11cd != oldlsoa11cd) {
 					oldlsoa11cd = e.features[0].properties.lsoa11cd;
-					map.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", e.features[0].properties.lsoa11cd]);
+					mapLeft.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", e.features[0].properties.lsoa11cd]);
 
 					// selectArea(e.features[0].properties.lsoa11cd);
 
 
-					var features = map.queryRenderedFeatures(e.point,{layers: ['lsoa-outlines']});
+					var features = mapLeft.queryRenderedFeatures(e.point,{layers: ['lsoa-outlines']});
 				 	if(features.length != 0){
 
 						setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayername]);
@@ -356,7 +393,7 @@ if(Modernizr.webgl) {
 
 
 		function onLeave() {
-				map.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", ""]);
+				mapLeft.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", ""]);
 				oldlsoa11cd = "";
 				// $("#areaselect").val("").trigger("chosen:updated");
 				hideaxisVal();
@@ -370,7 +407,7 @@ if(Modernizr.webgl) {
 
 		 		if(newlsoa11cd != oldlsoa11cd) {
 		 			oldlsoa11cd = e.features[0].properties.lsoa11cd;
-		 			map.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", e.features[0].properties.lsoa11cd]);
+		 			mapLeft.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", e.features[0].properties.lsoa11cd]);
 
 		 			 //selectArea(e.features[0].properties.lsoa11cd);
 					updatePercent(e.features[0]);
@@ -384,14 +421,14 @@ if(Modernizr.webgl) {
 		 };
 
 		function disableMouseEvents() {
-				map.off("mousemove", "lsoa-outlines", onMove);
-				map.off("mouseleave", "lsoa-outlines", onLeave);
+				mapLeft.off("mousemove", "lsoa-outlines", onMove);
+				mapLeft.off("mouseleave", "lsoa-outlines", onLeave);
 		}
 
 		function enableMouseEvents() {
-				map.on("mousemove", "lsoa-outlines", onMove);
-				map.on("click", "lsoa-outlines", onClick);
-				map.on("mouseleave", "lsoa-outlines", onLeave);
+				mapLeft.on("mousemove", "lsoa-outlines", onMove);
+				mapLeft.on("click", "lsoa-outlines", onClick);
+				mapLeft.on("mouseleave", "lsoa-outlines", onLeave);
 		}
 
 		function setAxisVal(areanm,areaval) {
@@ -828,13 +865,13 @@ if(Modernizr.webgl) {
 
 	function addFullscreen() {
 
-		currentBody = d3.select("#map").style("height");
+		currentBody = d3.select("#mapLeft").style("height");
 		d3.select(".mapboxgl-ctrl-fullscreen").on("click", setbodyheight)
 
 	}
 
 	function setbodyheight() {
-		d3.select("#map").style("height","100%");
+		d3.select("#mapLeft").style("height","100%");
 
 		document.addEventListener('webkitfullscreenchange', exitHandler, false);
 		document.addEventListener('mozfullscreenchange', exitHandler, false);
@@ -860,7 +897,7 @@ if(Modernizr.webgl) {
 		}
 
 	function shrinkbody() {
-		d3.select("#map").style("height",currentBody);
+		d3.select("#mapLeft").style("height",currentBody);
 		pymChild.sendHeight();
 	}
 
@@ -916,19 +953,19 @@ if(Modernizr.webgl) {
 
 	function successpc(lat,lng) {
 
-		map.jumpTo({center:[lng,lat], zoom:12})
-		point = map.project([lng,lat]);
+		mapLeft.jumpTo({center:[lng,lat], zoom:12})
+		point = mapLeft.project([lng,lat]);
 
 
 		setTimeout(function(){
 
 		var tilechecker = setInterval(function(){
 			 features=null
-		 	features = map.queryRenderedFeatures(point,{layers: ['lsoa-outlines']});
+		 	features = mapLeft.queryRenderedFeatures(point,{layers: ['lsoa-outlines']});
 		 	if(features.length != 0){
 		 		 //onrender(),
-		 		map.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", features[0].properties.lsoa11cd]);
-				//var features = map.queryRenderedFeatures(point);
+		 		mapLeft.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", features[0].properties.lsoa11cd]);
+				//var features = mapLeft.queryRenderedFeatures(point);
 				disableMouseEvents();
 				setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayername]);
 				updatePercent(features[0]);
@@ -971,7 +1008,7 @@ if(Modernizr.webgl) {
 
 							disableMouseEvents();
 
-							map.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", params.selected]);
+							mapLeft.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", params.selected]);
 
 							selectArea(params.selected);
 							setAxisVal(params.selected);
@@ -999,7 +1036,7 @@ if(Modernizr.webgl) {
 } else {
 
 	//provide fallback for browsers that don't support webGL
-	d3.select('#map').remove();
+	d3.select('#mapLeft').remove();
 	d3.select('body').append('p').html("Unfortunately your browser does not support WebGL. <a href='https://www.gov.uk/help/browsers' target='_blank>'>If you're able to please upgrade to a modern browser</a>")
 
 }

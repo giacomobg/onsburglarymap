@@ -91,14 +91,17 @@
    }
 
 
-	    #map {
-			position:absolute;
+	  #mapLeft #mapRight {
 			top:0px;
 			margin-top:185px;
 			height: 350px;
-			width: 100%;
 			overflow:visible;
 		}
+
+    #mapLeft {
+      position:absolute;
+      width: 100%;
+    }
 
 		#selectNav {
 			position:absolute;
@@ -278,7 +281,20 @@
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MBCBVQS" height="0" width="0" style="display:none;visibility:hidden"></iframe>
   </noscript>
 
-<div id='map'>
+  <div id='selectNav'>
+    <!-- <div id="title">Index of Multiple Deprivation (IMD) 2019</div> -->
+    <div class="input-group">
+        <input type="text" class="search-control clearable" placeholder="Enter a postcode">
+        <div class="input-group-addon search-group">
+            <button id="submitPost" type="submit" style="background: none;border:0;">
+              <span class="visuallyhidden">Postcode search</span>
+              <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </div>
+    </div>
+  </div>
+
+<div id='mapLeft'>
 	<div id='keydiv'>
     <!-- <div id="keyvalue" style="height:50px">
     </div> -->
@@ -296,27 +312,27 @@
       </details>
     </div> -->
   </div>
-    <div id='selectNav'>
-      <!-- <div id="title">Index of Multiple Deprivation (IMD) 2019</div> -->
-      <div class="input-group">
-          <input type="text" class="search-control clearable" placeholder="Enter a postcode">
-          <div class="input-group-addon search-group">
-              <button id="submitPost" type="submit" style="background: none;border:0;">
-                <span class="visuallyhidden">Postcode search</span>
-                <span class="glyphicon glyphicon-search"></span>
-              </button>
-          </div>
-
-
-      </div>
-
-
-    </div>
-    <div>
-    </div>
-
-
 </div>
+<div id='mapRight'>
+	<!-- <div id='keydiv'>
+    <div id="keyvalue" style="height:50px">
+    </div>
+    <div id="keyunits2" style="height:20px"></div>
+    <svg id="key" style="height:60px">
+    </svg>
+    <div id="keyunits" style="height:30px"></div> -->
+
+    <!-- <div class="hidden-xs">
+      <details class="details" role="group" open>
+          <summary class="details__summary" role="button" aria-controls="details-content-3" aria-expanded="true">Compare to Other Local Factors</summary>
+          <div class="details__body" id="details-content-3" aria-hidden="false">
+              <label class="embed-code__label" id="people"></label>
+          </div>
+      </details>
+    </div> -->
+  </div>
+</div>
+
 <div id="source">
 <h6>Source: <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" target="_blank">Ministry of Housing, Communities & Local Government</a></h6>
 
