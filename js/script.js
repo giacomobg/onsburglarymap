@@ -1014,7 +1014,6 @@ d3.select("#mapRight").style("top","150px")
 
 	function setbodyheight() {
 		d3.select("#mapLeft").style("height","100%");
-		d3.select("#mapRight").style("height","100%");
 
 		document.addEventListener('webkitfullscreenchange', exitHandler, false);
 		document.addEventListener('mozfullscreenchange', exitHandler, false);
