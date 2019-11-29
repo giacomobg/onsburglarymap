@@ -43,7 +43,12 @@ if(Modernizr.webgl) {
 		// Set up stops
 		var breaksSliced = dvc.breaks.slice(1) // gets everything other than first element
 		stops = breaksSliced.map(function(x, i) {
-			return [x, dvc.varcolour[i]]
+			return [x, dvc.varcolour[i]] // creates an array of [number, colour] pairs
+		});
+
+		var breaksSliced = dvc.breaksRight.slice(1) // gets everything other than first element
+		stopsRight = breaksSliced.map(function(x, i) {
+			return [x, dvc.varcolour[i]] // creates an array of [number, colour] pairs
 		});
 
 
@@ -81,7 +86,7 @@ if(Modernizr.webgl) {
 			maxZoom: 17,
 		  attributionControl: false
 		});
-		//add fullscreen option
+		// // add fullscreen option
 		// mapLeft.addControl(new mapboxgl.FullscreenControl());
 		//
 		// // Add zoom and rotation controls to the map.
@@ -117,31 +122,31 @@ if(Modernizr.webgl) {
 		});
 
 		//add fullscreen option
-		// mapRight.addControl(new mapboxgl.FullscreenControl());
-		//
-		// // Add zoom and rotation controls to the map.
-		// mapRight.addControl(new mapboxgl.NavigationControl());
-		//
-		// // Disable map rotation using right click + drag
-		// mapRight.dragRotate.disable();
-		//
-		// // Disable map rotation using touch rotation gesture
-		// mapRight.touchZoomRotate.disableRotation();
-		//
-		//
-		// // Add geolocation controls to the map.
-		// mapRight.addControl(new mapboxgl.GeolocateControl({
-		// 	positionOptions: {
-		// 		enableHighAccuracy: true
-		// 	}
-		// }));
-		//
-		// //add compact attribution
-		// mapRight.addControl(new mapboxgl.AttributionControl({
-		// 	compact: true
-		// }));
-		//
-		// addFullscreen();
+		mapRight.addControl(new mapboxgl.FullscreenControl());
+
+		// Add zoom and rotation controls to the map.
+		mapRight.addControl(new mapboxgl.NavigationControl());
+
+		// Disable map rotation using right click + drag
+		mapRight.dragRotate.disable();
+
+		// Disable map rotation using touch rotation gesture
+		mapRight.touchZoomRotate.disableRotation();
+
+
+		// Add geolocation controls to the map.
+		mapRight.addControl(new mapboxgl.GeolocateControl({
+			positionOptions: {
+				enableHighAccuracy: true
+			}
+		}));
+
+		//add compact attribution
+		mapRight.addControl(new mapboxgl.AttributionControl({
+			compact: true
+		}));
+
+		addFullscreen();
 
 		if(config.ons.breaks =="jenks") {
 			breaks = [];
