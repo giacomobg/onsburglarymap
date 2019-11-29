@@ -522,7 +522,8 @@ d3.select("#mapRight").style("top","150px")
 					var features = mapLeft.queryRenderedFeatures(e.point,{layers: ['lsoa-outlines']});
 				 	if(features.length != 0){
 
-						setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayername]);
+						setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayername], "left");
+						setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayernameRight], "right");
 						updatePercent(e.features[0]);
 					}
 					//setAxisVal(e.features[0].properties.lsoa11nm, e.features[0].properties["houseprice"]);
@@ -585,7 +586,7 @@ d3.select("#mapRight").style("top","150px")
 				mapLeft.on("mouseleave", "lsoa-outlines", onLeave);
 		}
 
-		function setAxisVal(areanm,areaval) {
+		function setAxisVal(areanm,areaval,side) {
 			d3.select(".keyvalue").style("font-weight","bold").html(function(){
 				if(!isNaN(areaval)) {
 					return "Yearly burglaries for every 1000 people in " + areanm;
@@ -600,26 +601,39 @@ d3.select("#mapRight").style("top","150px")
 			d3.selectAll(".blocks").attr("stroke","black").attr("stroke-width","2px");
 
 			function blockLookup(areaval) {
+				if (side = "right") {
+					var brks = dvc.breaksRight;
+				}
+				else if (side = "left") {
+				 var brks = breaks
+				}
 				for (i = 0; i <= dvc.numberBreaks; i++) {
-					if (areaval <= breaks[i]) {
+					if (areaval <= brks[i]) {
 						return i
 					}
 				}
 				return dvc.numberBreaks // if areaval is larger than top value, assign to top value block
 			}
-			d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
+			d3.select("#block-" + side + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
+
+			if (side == "left") {
+				domain_func = x;
+			}
+			else if (side == "right") {
+				domain_func = xRight;
+			};
 
 			function getLineX(areaval) {
 				if(!isNaN(areaval)) {
-					return x(areaval);
+					return domain_func(areaval);
 				}
-				else return x(midpoint);
+				else return domain_func(midpoint);
 			}
 
 			var upperThreshold = breaks[breaks.length-1];
 			var lineX = getLineX(areaval)
 
-			d3.select("#currLine")
+			d3.select(".currLine." + side)
 							.transition()
 							.duration(400)
 							.style("opacity", function() {if (areaval > upperThreshold) return 0; else return 1;})
@@ -627,7 +641,7 @@ d3.select("#mapRight").style("top","150px")
 							.attr("x2", lineX);
 
 
-						d3.select("#currVal")
+						d3.select(".currVal." + side)
 							.text(function() {
 								if(!isNaN(areaval)) {
 									return displayformat(areaval)
@@ -636,7 +650,7 @@ d3.select("#mapRight").style("top","150px")
 							})
 							.transition()
 							.duration(400)
-							.attr("x", function() {if (areaval > upperThreshold) return x(upperThreshold); else return lineX;});
+							.attr("x", function() {if (areaval > upperThreshold) return domain_func(upperThreshold); else return lineX;});
 
 		}
 
@@ -739,7 +753,7 @@ d3.select("#mapRight").style("top","150px")
 						  };
 						}))
 					  .enter().append("rect")
-						.attr("id",function(d,i){return "block" + (i+1)})
+						.attr("id",function(d,i){return "block-left" + (i+1)})
 						.attr("class", "blocks")
 						.attr("height", 10)
 						.attr("x", function(d) { console.log(d)
@@ -753,7 +767,7 @@ d3.select("#mapRight").style("top","150px")
 // console.log(x.domain)
 
 					g2.append("line")
-						.attr("id", "currLine")
+						.attr("class", "currLine left")
 						.attr("x1", x(x.domain()[0]))
 						.attr("x2", x(x.domain()[0]))
 						.attr("y1", -10)
@@ -761,11 +775,9 @@ d3.select("#mapRight").style("top","150px")
 						.attr("stroke-width","2px")
 						.attr("stroke","#fff");
 
-					g2.append("line")
-						.attr("id", "")
 
 					g2.append("text")
-						.attr("id", "currVal")
+						.attr("class", "currVal left")
 						.attr("x", x(x.domain()[0]))
 						.attr("y", -12)
 						.style("fill", "#fff")
@@ -870,8 +882,7 @@ d3.select("#mapRight").style("top","150px")
 // console.log(x.domain)
 
 					g2.append("line")
-						.attr("id", "currLine-right")
-						.attr("class", "right")
+						.attr("class", "currLine right")
 						.attr("x1", xRight(xRight.domain()[0]))
 						.attr("x2", xRight(xRight.domain()[0]))
 						.attr("y1", -10)
@@ -881,8 +892,7 @@ d3.select("#mapRight").style("top","150px")
 
 
 					g2.append("text")
-						.attr("id", "currVal-right")
-						.attr("class", "right")
+						.attr("class", "currVal right")
 						.attr("x", xRight(xRight.domain()[0]))
 						.attr("y", -12)
 						.style("fill", "#fff")
