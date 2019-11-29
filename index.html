@@ -10,8 +10,7 @@
   <title>Map title here</title>
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet'/>
-  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/>
   <link href='https://cdn.ons.gov.uk/sixteens/a62dd01/css/main.css' rel='stylesheet'/>
   <link href='css/global.css' rel='stylesheet'/>
   <link href='https://onsvisual.github.io/pattern-library/dist/fontawesome/css/all.css' rel='stylesheet'/>
@@ -50,6 +49,7 @@
 		#mapLeft, #mapRight {
 			width: 50%;
       height: 100%;
+      position:absolute;
 		}
 
     #mapRight {
@@ -363,8 +363,9 @@
 
 
 <!--<script src='js/mapbox-gl.js'></script>-->
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.4.0/mapbox-gl.js'></script>
-
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css' type='text/css' />
 <script src="js/script.js"></script>
 
 <noscript>

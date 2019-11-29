@@ -28,6 +28,7 @@ if(Modernizr.webgl) {
 
 		windowheight = window.innerHeight;
 		d3.select("#mapLeft").style("height",windowheight + "px")
+		d3.select("#mapRight").style("height",windowheight + "px")
 
 		//set title of page
 		//Need to test that this shows up in GA
@@ -81,33 +82,33 @@ if(Modernizr.webgl) {
 		  attributionControl: false
 		});
 		//add fullscreen option
-		mapLeft.addControl(new mapboxgl.FullscreenControl());
-
-		// Add zoom and rotation controls to the map.
-		mapLeft.addControl(new mapboxgl.NavigationControl());
-
-		// Disable map rotation using right click + drag
-		mapLeft.dragRotate.disable();
-
-		// Disable map rotation using touch rotation gesture
-		mapLeft.touchZoomRotate.disableRotation();
-
-
-		// Add geolocation controls to the map.
-		mapLeft.addControl(new mapboxgl.GeolocateControl({
-			positionOptions: {
-				enableHighAccuracy: true
-			}
-		}));
-
-		//add compact attribution
-		mapLeft.addControl(new mapboxgl.AttributionControl({
-			compact: true
-		}));
+		// mapLeft.addControl(new mapboxgl.FullscreenControl());
+		//
+		// // Add zoom and rotation controls to the map.
+		// mapLeft.addControl(new mapboxgl.NavigationControl());
+		//
+		// // Disable map rotation using right click + drag
+		// mapLeft.dragRotate.disable();
+		//
+		// // Disable map rotation using touch rotation gesture
+		// mapLeft.touchZoomRotate.disableRotation();
+		//
+		//
+		// // Add geolocation controls to the map.
+		// mapLeft.addControl(new mapboxgl.GeolocateControl({
+		// 	positionOptions: {
+		// 		enableHighAccuracy: true
+		// 	}
+		// }));
+		//
+		// //add compact attribution
+		// mapLeft.addControl(new mapboxgl.AttributionControl({
+		// 	compact: true
+		// }));
 
 		mapRight = new mapboxgl.Map({
 		  container: 'mapRight', // container id
-		  style: 'data/style.json', //stylesheet location
+			style: 'data/style.json', //stylesheet location
 			center: [-1.27, 50.8106], // starting position51.5074° N, 0.127850.910637,-1.27441
 		  zoom:10, // starting zoom
 		  minZoom:4,
@@ -116,31 +117,31 @@ if(Modernizr.webgl) {
 		});
 
 		//add fullscreen option
-		mapRight.addControl(new mapboxgl.FullscreenControl());
-
-		// Add zoom and rotation controls to the map.
-		mapRight.addControl(new mapboxgl.NavigationControl());
-
-		// Disable map rotation using right click + drag
-		mapRight.dragRotate.disable();
-
-		// Disable map rotation using touch rotation gesture
-		mapRight.touchZoomRotate.disableRotation();
-
-
-		// Add geolocation controls to the map.
-		mapRight.addControl(new mapboxgl.GeolocateControl({
-			positionOptions: {
-				enableHighAccuracy: true
-			}
-		}));
-
-		//add compact attribution
-		mapRight.addControl(new mapboxgl.AttributionControl({
-			compact: true
-		}));
-
-		addFullscreen();
+		// mapRight.addControl(new mapboxgl.FullscreenControl());
+		//
+		// // Add zoom and rotation controls to the map.
+		// mapRight.addControl(new mapboxgl.NavigationControl());
+		//
+		// // Disable map rotation using right click + drag
+		// mapRight.dragRotate.disable();
+		//
+		// // Disable map rotation using touch rotation gesture
+		// mapRight.touchZoomRotate.disableRotation();
+		//
+		//
+		// // Add geolocation controls to the map.
+		// mapRight.addControl(new mapboxgl.GeolocateControl({
+		// 	positionOptions: {
+		// 		enableHighAccuracy: true
+		// 	}
+		// }));
+		//
+		// //add compact attribution
+		// mapRight.addControl(new mapboxgl.AttributionControl({
+		// 	compact: true
+		// }));
+		//
+		// addFullscreen();
 
 		if(config.ons.breaks =="jenks") {
 			breaks = [];
@@ -291,7 +292,7 @@ if(Modernizr.webgl) {
 
 
 
-})
+});
 
 mapRight.on('load', function() {
 
@@ -415,7 +416,7 @@ mapRight.on('load', function() {
 }) // end of set up mapRight
 
 if(parseInt(d3.select('body').style("width"))<600){
-new mapboxgl.Compare(mapLeft, mapRight);
+var map = new mapboxgl.Compare(mapLeft, mapRight);
 d3.select("#mapLeft").style("top","150px")
 d3.select("#mapRight").style("top","150px")
 }else{
