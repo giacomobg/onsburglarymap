@@ -521,7 +521,7 @@ d3.select("#mapRight").style("top","150px")
 
 					var features = mapLeft.queryRenderedFeatures(e.point,{layers: ['lsoa-outlines']});
 				 	if(features.length != 0){
-
+						console.log('do setAxisVal');
 						setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayername], "left");
 						setAxisVal(features[0].properties.lsoa11nm, features[0].properties[hoverlayernameRight], "right");
 						updatePercent(e.features[0]);
@@ -587,6 +587,7 @@ d3.select("#mapRight").style("top","150px")
 		}
 
 		function setAxisVal(areanm,areaval,side) {
+
 			d3.select(".keyvalue").style("font-weight","bold").html(function(){
 				if(!isNaN(areaval)) {
 					return "Yearly burglaries for every 1000 people in " + areanm;
@@ -599,27 +600,29 @@ d3.select("#mapRight").style("top","150px")
 			});
 
 			d3.selectAll(".blocks").attr("stroke","black").attr("stroke-width","2px");
-
-			function blockLookup(areaval) {
-				if (side = "right") {
+			function blockLookup(areaval, side) {
+				if (Array.prototype.slice.call(arguments)[1] = "right") {
 					var brks = dvc.breaksRight;
 				}
-				else if (side = "left") {
-				 var brks = breaks
+				else if (Array.prototype.slice.call(arguments)[1] = "left") {
+				 var brks = dvc.breaks;
 				}
+				else console.log('What went wrong?')
 				for (i = 0; i <= dvc.numberBreaks; i++) {
-					if (areaval <= brks[i]) {
+					if (Array.prototype.slice.call(arguments)[0] <= brks[i]) {
 						return i
 					}
 				}
 				return dvc.numberBreaks // if areaval is larger than top value, assign to top value block
 			}
-			d3.select("#block-" + side + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
-
-			if (side == "left") {
+			if (Array.prototype.slice.call(arguments)[2] == "left") {
+				console.log("#block-" + Array.prototype.slice.call(arguments)[2] + (blockLookup(Array.prototype.slice.call(arguments)[1], Array.prototype.slice.call(arguments)[2])))
+			}
+			d3.select("#block-" + Array.prototype.slice.call(arguments)[2] + (blockLookup(Array.prototype.slice.call(arguments)[1], Array.prototype.slice.call(arguments)[2]))).attr("stroke","aqua").attr("stroke-width","3px").raise()
+			if (Array.prototype.slice.call(arguments)[2] == "left") {
 				domain_func = x;
 			}
-			else if (side == "right") {
+			else if (Array.prototype.slice.call(arguments)[2] == "right") {
 				domain_func = xRight;
 			};
 
@@ -632,8 +635,7 @@ d3.select("#mapRight").style("top","150px")
 
 			var upperThreshold = breaks[breaks.length-1];
 			var lineX = getLineX(areaval)
-
-			d3.select(".currLine." + side)
+			d3.select(".currLine." + Array.prototype.slice.call(arguments)[2])
 							.transition()
 							.duration(400)
 							.style("opacity", function() {if (areaval > upperThreshold) return 0; else return 1;})
@@ -641,7 +643,7 @@ d3.select("#mapRight").style("top","150px")
 							.attr("x2", lineX);
 
 
-						d3.select(".currVal." + side)
+						d3.select(".currVal." + Array.prototype.slice.call(arguments)[2])
 							.text(function() {
 								if(!isNaN(areaval)) {
 									return displayformat(areaval)
