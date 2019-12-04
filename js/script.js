@@ -26,8 +26,9 @@ if(Modernizr.webgl) {
 		hoverlayernames = ["burglaries_1in1000_burglaries_per_capita"]
 		hoverlayername = "burglaries_1in1000_burglaries_per_capita";
 
-		windowheight = window.innerHeight;
-		d3.select("#map").style("height",windowheight + "px")
+		var maxMapHeight = 600
+		windowheight = Math.min(window.innerHeight, maxMapHeight);
+		d3.select("#map").style("height",windowheight + "px") // uncomment to make fullscreen
 
 		//set title of page
 		//Need to test that this shows up in GA
@@ -903,6 +904,7 @@ if(Modernizr.webgl) {
 						//$("#pcError").hide();
 						lat =data1.result.latitude;
 						lng = data1.result.longitude;
+						console.log(data1.result.admin_district);
 						successpc(lat,lng)
 					} else {
 						$(".search-control").val("Sorry, invalid postcode.");
