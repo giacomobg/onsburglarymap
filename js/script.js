@@ -623,7 +623,7 @@ if(Modernizr.webgl) {
 					//Temporary	hardcode unit text
 					dvc.unittext = "change in life expectancy";
 
-					// d3.select("#keyunits").append("p").style("float","left").style("margin-top","-5px").style("margin-left","15px").html("&#8592")
+					d3.select("#keyunits").append("p").style("float","center").style("margin-top","-5px").style("text-align","center").html(dvc.varunit4)
 					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","15px").style("margin-top","-5px").html(dvc.varunit);
 					// d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
 					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-5px").style("margin-right","20px").html(dvc.varunit2);
