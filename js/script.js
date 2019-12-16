@@ -417,7 +417,7 @@ if(Modernizr.webgl) {
 				}
 				return dvc.numberBreaks // if areaval is larger than top value, assign to top value block
 			}
-			d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
+			// d3.select("#block" + (blockLookup(areaval))).attr("stroke","aqua").attr("stroke-width","3px").raise()
 
 			function getLineX(areaval) {
 				if(!isNaN(areaval)) {
@@ -567,12 +567,12 @@ if(Modernizr.webgl) {
 						.attr("x1", x(x.domain()[0]))
 						.attr("x2", x(x.domain()[0]))
 						.attr("y1", -10)
-						.attr("y2", 8)
+						.attr("y2", -2)
 						.attr("stroke-width","2px")
 						.attr("stroke","#fff");
 
-					g2.append("line")
-						.attr("id", "")
+					// g2.append("line")
+					// 	.attr("id", "")
 
 					g2.append("text")
 						.attr("id", "currVal")
@@ -581,6 +581,23 @@ if(Modernizr.webgl) {
 						.style("fill", "#fff")
 						.text("");
 
+					g2.append("line")
+						.attr("id", "engLine")
+						.style("opacity", 0.7)
+						.attr("x1", x(5))
+						.attr("x2", x(5))
+						.attr("y1", 12)
+						.attr("y2", 50)
+						.attr("stroke-width","2px")
+						.attr("stroke","#fff");
+
+					g2.append("text")
+						.attr("id", "engVal")
+						.attr("x", x(5.5))
+						.attr("y", 54)
+						.style("fill", "#fff")
+						.style("text-anchor", "start")
+						.text("England and Wales average");
 
 
 					keyhor.selectAll("rect")
@@ -623,7 +640,7 @@ if(Modernizr.webgl) {
 					//Temporary	hardcode unit text
 					dvc.unittext = "change in life expectancy";
 
-					d3.select("#keyunits").append("p").style("float","center").style("margin-top","-5px").style("text-align","center").html(dvc.varunit4)
+					// d3.select("#keyunits").append("p").style("float","center").style("margin-top","-5px").style("text-align","center").html(dvc.varunit4)
 					d3.select("#keyunits").append("p").style("float","left").attr("id","keyunit").style("margin-left","15px").style("margin-top","-5px").html(dvc.varunit);
 					// d3.select("#keyunits").append("p").style("float","right").style("margin-top","-5px").style("margin-right","20px").html("&#8594")
 					d3.select("#keyunits").append("p").style("float","right").attr("id","keyunitR").style("margin-top","-5px").style("margin-right","20px").html(dvc.varunit2);
