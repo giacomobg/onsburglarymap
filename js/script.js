@@ -564,6 +564,7 @@ if(Modernizr.webgl) {
 
 					g2.append("line")
 						.attr("id", "currLine")
+						.style("opacity", 0)
 						.attr("x1", x(x.domain()[0]))
 						.attr("x2", x(x.domain()[0]))
 						.attr("y1", -10)
