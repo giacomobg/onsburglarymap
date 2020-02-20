@@ -409,6 +409,7 @@ if(Modernizr.webgl) {
 
 			d3.selectAll(".blocks").attr("stroke","black").attr("stroke-width","2px");
 
+			// get the key block that the current areaval sits in and highlight it
 			function blockLookup(areaval) {
 				for (i = 0; i <= dvc.numberBreaks; i++) {
 					if (areaval <= breaks[i]) {
@@ -468,6 +469,8 @@ if(Modernizr.webgl) {
 			d3.selectAll(".legendRect").style("width","0px");
 
 			d3.select("#currLine")
+				.transition()
+				.duration(0)
 				.style("opacity", 0)
 
 			d3.select("#currVal").text("")
@@ -609,11 +612,11 @@ if(Modernizr.webgl) {
 
 					g2.append("text")
 						.attr("id", "engVal")
-						.attr("x", x(5.5))
+						.attr("x", x(7))
 						.attr("y", -29)
 						.style("fill", "#fff")
 						.style("text-anchor", "middle")
-						.text("Average");
+						.text("England & Wales: 5");
 
 
 					keyhor.selectAll("rect")
