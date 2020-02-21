@@ -269,9 +269,6 @@ if(Modernizr.webgl) {
 
 			map.getCanvasContainer().style.cursor = 'pointer';
 
-			//Add click event
-			map.on('click', 'lsoa-outlines', onClick);
-
 			//get location on click
 			d3.select(".mapboxgl-ctrl-geolocate").on("click", geolocate);
 
@@ -279,6 +276,7 @@ if(Modernizr.webgl) {
 
 })
 
+		// empties search bar when you click
 		$(".search-control").click(function() {
 			$(".search-control").val('');
 		})
@@ -355,7 +353,6 @@ if(Modernizr.webgl) {
 		});
 
 
-
 		function onLeave() {
 				map.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", ""]);
 				oldlsoa11cd = "";
@@ -391,7 +388,7 @@ if(Modernizr.webgl) {
 
 		function enableMouseEvents() {
 				map.on("mousemove", "lsoa-outlines", onMove);
-				map.on("click", "lsoa-outlines", onClick);
+				// map.on("click", "lsoa-outlines", onClick);
 				map.on("mouseleave", "lsoa-outlines", onLeave);
 		}
 
@@ -974,61 +971,6 @@ if(Modernizr.webgl) {
 		 	}
 		 },500)
 		},500);
-
-
-
-
-	};
-
-		function selectlist(datacsv) {
-
-			var areacodes =  datacsv.map(function(d) { return d.lsoa11cd; });
-			var areanames =  datacsv.map(function(d) { return d.lsoa11nm; });
-			var menuarea = d3.zip(areanames,areacodes).sort(function(a, b){ return d3.ascending(a[0], b[0]); });
-
-			// Build option menu for occupations
-			var optns = d3.select("#selectNav").append("div").attr("id","sel").append("select")
-				.attr("id","areaselect")
-				.attr("style","width:98%")
-				.attr("class","chosen-select");
-
-
-			optns.append("option")
-				.attr("value","first")
-				.text("");
-
-			optns.selectAll("p").data(menuarea).enter().append("option")
-				.attr("value", function(d){ return d[1]})
-				.text(function(d){ return d[0]});
-
-			myId=null;
-
-			$('#areaselect').chosen({width: "98%", allow_single_deselect:true}).on('change',function(evt,params){
-
-					if(typeof params != 'undefined') {
-
-							disableMouseEvents();
-
-							map.setFilter("lsoa-outlines-hover", ["==", "lsoa11cd", params.selected]);
-
-							selectArea(params.selected);
-							setAxisVal(params.selected);
-
-							zoomToArea(params.selected);
-
-							dataLayer.push({
-									'event': 'mapDropSelect',
-									'selected': params.selected
-							})
-					}
-					else {
-							enableMouseEvents();
-							hideaxisVal();
-							onLeave();
-							resetZoom();
-					}
-
-			});
 
 	};
 
