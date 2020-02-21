@@ -429,7 +429,7 @@ if(Modernizr.webgl) {
 
 			d3.select("#currLine")
 							.transition()
-							.duration(400)
+							.duration(300)
 							.style("opacity", function() {if (areaval > upperThreshold) return 0; else return 1;})
 							.attr("x1", lineX)
 							.attr("x2", lineX);
@@ -449,12 +449,12 @@ if(Modernizr.webgl) {
 			d3.select("#currVal")
 							.text(currVal)
 							.transition()
-							.duration(400)
+							.duration(300)
 							.attr("x", function() {if (areaval > upperThreshold) return x(upperThreshold); else return lineX;});
 
 			d3.select("#engLine")
 							.transition()
-							.duration(200)
+							.duration(100)
 							.style("opacity", engOpacity)
 
 		}
@@ -471,61 +471,13 @@ if(Modernizr.webgl) {
 				.style("opacity", 0)
 
 			d3.select("#currVal").text("")
+			d3.select("#engLine")
+							.transition()
+							.duration(100)
+							.style("opacity", 1)
 		}
-		d3.select("#engLine")
-						.transition()
-						.duration(200)
-						.style("opacity", 1)
 
 		function createKey(config){
-
-			// keywidth = d3.select("#keydiv").node().getBoundingClientRect().width;
-			//
-			// var svgkey = d3.select("#keydiv")
-			// 	.append("svg")
-			// 	.attr("id", "key")
-			// 	.attr("width", keywidth)
-			// 	.attr("height",65);
-			//
-			//
-			// var color = d3.scaleThreshold()
-			//    .domain(breaks)
-			//    .range(colour);
-			//
-			// // Set up scales for legend
-			// x = d3.scaleLinear()
-			// 	.domain([breaks[0], breaks[dvc.numberBreaks]]) /*range for data*/
-			// 	.range([0,keywidth-30]); /*range for pixels*/
-			//
-			//
-			// var xAxis = d3.axisBottom(x)
-			// 	.tickSize(15)
-			// 	.tickValues(color.domain())
-			// 	.tickFormat(legendformat);
-			//
-			// var g2 = svgkey.append("g").attr("id","horiz")
-			// 	.attr("transform", "translate(15,30)");
-			//
-			//
-			// keyhor = d3.select("#horiz");
-			//
-			// g2.selectAll("rect")
-			// 	.data(color.range().map(function(d,i) {
-			//
-			// 	  return {
-			// 		x0: i ? x(color.domain()[i+1]) : x.range()[0],
-			// 		x1: i < color.domain().length ? x(color.domain()[i+1]) : x.range()[1],
-			// 		z: d
-			// 	  };
-			// 	}))
-			//   .enter().append("rect")
-			// 	.attr("class", "blocks")
-			// 	.attr("height", 8)
-			// 	.attr("x", function(d) {
-			// 		 return d.x0; })
-			// 	.attr("width", function(d) {return d.x1 - d.x0; })
-			// 	.style("opacity",0.8)
-			// 	.style("fill", function(d) { return d.z; });
 
 					keywidth = d3.select("#keydiv").node().getBoundingClientRect().width;
 
@@ -542,11 +494,10 @@ if(Modernizr.webgl) {
 						.domain([breaks[0], breaks[dvc.numberBreaks]]) /*range for data*/
 						.range([0,keywidth-40]); /*range for pixels*/
 
-
 					var xAxis = d3.axisBottom(x)
 						.tickSize(15)
 						.tickValues(color.domain())
-						.tickFormat(function(d) {if (d == breaks[breaks.length-1]) return "> " + d; else return d});
+						.tickFormat(function(d) {console.log(color.domain()); if (d == breaks[breaks.length-1]) return "over " + d; else return d});
 
 					var g2 = svgkey.append("g").attr("id","horiz")
 						.attr("transform", "translate(15,40)");
@@ -575,8 +526,6 @@ if(Modernizr.webgl) {
 						.attr("stroke-width","2px")
 						.style("fill", function(d) { return d.z; });
 
-// console.log(x.domain)
-
 					g2.append("line")
 						.attr("id", "currLine")
 						.style("opacity", 0)
@@ -586,9 +535,6 @@ if(Modernizr.webgl) {
 						.attr("y2", -2)
 						.attr("stroke-width","2px")
 						.attr("stroke","#fff");
-
-					// g2.append("line")
-					// 	.attr("id", "")
 
 					g2.append("text")
 						.attr("id", "currVal")
